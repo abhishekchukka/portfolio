@@ -1,0 +1,265 @@
+import { useEffect, useRef } from "react";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, OrbitControls } from "@react-three/drei";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Earth Hologram Component
+function EarthHologram({ position = [0, 0, 0], scale = [1, 1, 1] }) {
+  const { scene } = useGLTF("/earth_hologram.glb");
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          if (child.material) {
+            child.material.needsUpdate = true;
+          }
+        }
+      });
+    }
+  }, [scene]);
+
+  return (
+    <primitive
+      ref={meshRef}
+      object={scene}
+      position={position}
+      scale={scale}
+      rotation={[0, 0, 0]}
+    />
+  );
+}
+
+// Tech Icon Component with Hover Effects
+function TechIcon({ src, name, index }) {
+  const iconRef = useRef();
+
+  useEffect(() => {
+    const icon = iconRef.current;
+    
+    // Staggered entrance animation
+    gsap.fromTo(icon, 
+      { 
+        opacity: 0, 
+        scale: 0, 
+        rotation: -180,
+        filter: "blur(10px)" 
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        filter: "blur(0px)",
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: icon,
+          start: "top 85%",
+        }
+      }
+    );
+
+    // Hover animations
+    const handleMouseEnter = () => {
+      gsap.to(icon, {
+        scale: 1.2,
+        rotation: 360,
+        boxShadow: "0 0 30px #ffaa00",
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(icon, {
+        scale: 1,
+        rotation: 0,
+        boxShadow: "0 0 10px rgba(255, 170, 0, 0.3)",
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    };
+
+    icon.addEventListener('mouseenter', handleMouseEnter);
+    icon.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      icon.removeEventListener('mouseenter', handleMouseEnter);
+      icon.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [index]);
+
+  return (
+    <div
+      ref={iconRef}
+      className="relative w-16 h-16 p-3 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-[#ffaa00]/30 backdrop-blur-md cursor-pointer group"
+      style={{ boxShadow: "0 0 10px rgba(255, 170, 0, 0.3)" }}
+      title={name}
+    >
+      <img src={src} alt={name} className="w-full h-full object-contain" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#ffaa00]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+    </div>
+  );
+}
+
+export default function About() {
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
+  const earthRef = useRef(null);
+  const skillsRef = useRef(null);
+
+  // Tech stack data
+  const techStack = [
+    { name: "React", src: "/src/assets/icons/react-2.svg" },
+    { name: "TypeScript", src: "/src/assets/icons/typescript.svg" },
+    { name: "Node.js", src: "/src/assets/icons/nodejs-1.svg" },
+    { name: "Python", src: "/src/assets/icons/python-3.svg" },
+    { name: "Firebase", src: "/src/assets/icons/firebase-3.svg" },
+    { name: "Next.js", src: "/src/assets/icons/next-js.svg" },
+    { name: "Tailwind CSS", src: "/src/assets/icons/tailwind-css-2.svg" },
+    { name: "Express", src: "/src/assets/icons/express-109.svg" },
+    { name: "PostgreSQL", src: "/src/assets/icons/postgresql.svg" },
+    { name: "PyTorch", src: "/src/assets/icons/pytorch-2.svg" },
+    { name: "VS Code", src: "/src/assets/icons/visual-studio-code-1.svg" },
+    { name: "GitHub", src: "/src/assets/icons/github-icon-1.svg" },
+  ];
+
+  useEffect(() => {
+    // Main title animation
+    gsap.fromTo(
+      titleRef.current,
+      { opacity: 0, y: 100, filter: "blur(8px)" },
+      {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.5,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        },
+      }
+    );
+
+    // Content sections animation
+    gsap.fromTo(
+      contentRef.current.children,
+      { opacity: 0, x: -100, filter: "blur(5px)" },
+      {
+        opacity: 1,
+        x: 0,
+        filter: "blur(0px)",
+        duration: 1.2,
+        stagger: 0.3,
+        delay: 0.5,
+        scrollTrigger: {
+          trigger: contentRef.current,
+          start: "top 70%",
+        },
+      }
+    );
+
+    // Earth hologram animation
+    if (earthRef.current) {
+      gsap.fromTo(
+        earthRef.current,
+        { opacity: 0, scale: 0, rotationY: -180 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotationY: 0,
+          duration: 2,
+          delay: 1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: earthRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+    }
+
+    // Parallax background elements
+    gsap.to(".parallax-bg-1", {
+      yPercent: -50,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    gsap.to(".parallax-bg-2", {
+      yPercent: -30,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a0a0f] to-[#1a1a2e] text-white"
+    >
+      {/* Parallax neon shapes */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute w-72 h-72 bg-green-400/20 rounded-full blur-3xl -top-20 -left-20 animate-pulse"></div>
+        <div className="absolute w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl top-40 -right-40 animate-pulse"></div>
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6">
+        {/* Left - Avatar */}
+        <div className="flex justify-center items-center">
+          <div className="relative w-64 h-64 rounded-full border-4 border-cyan-400 shadow-[0_0_30px_#00f0ff] overflow-hidden">
+            <img
+              src="/your-photo.png"
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+            {/* Scan lines overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-transparent animate-[scan_3s_linear_infinite]" />
+          </div>
+        </div>
+
+        {/* Right - Text */}
+        <div
+          ref={textRef}
+          className="backdrop-blur-md bg-white/5 border border-cyan-400/30 p-6 rounded-xl shadow-lg"
+        >
+          <h2
+            ref={titleRef}
+            className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent"
+          >
+            About Me
+          </h2>
+          <p className="text-lg leading-relaxed text-gray-300">
+            I’m <span className="text-cyan-400 font-semibold">Abhi</span>, a
+            passionate web developer and explorer of{" "}
+            <span className="text-green-400 font-semibold">
+              Machine Learning
+            </span>
+            . I love crafting interactive experiences that combine{" "}
+            <span className="text-cyan-400">design</span>,{" "}
+            <span className="text-green-400">technology</span>, and futuristic
+            vibes 🚀.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
