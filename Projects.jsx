@@ -5,6 +5,42 @@ import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import * as THREE from "three";
 
+// Custom hook for responsive values
+function useResponsiveValues() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setScreenWidth(width);
+      setIsMobile(width < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  return {
+    isMobile,
+    screenWidth,
+    cameraDistance: isMobile ? 15 : 10,
+    cameraFov: isMobile ? 85 : 75,
+    starCount: isMobile ? 500 : 1000,
+    starSize: isMobile ? 0.4 : 0.3,
+    brightStars: isMobile ? 25 : 50,
+    sunSize: isMobile ? 0.8 : 1.2,
+    sunCorona1: isMobile ? 1.0 : 1.5,
+    sunCorona2: isMobile ? 1.2 : 1.8,
+    planetScale: isMobile ? 0.7 : 1,
+    autoRotateSpeed: isMobile ? 0.5 : 1,
+    minDistance: isMobile ? 8 : 5,
+    maxDistance: isMobile ? 25 : 30,
+    enablePan: !isMobile,
+  };
+}
+
 const projects = [
   {
     id: 1,
@@ -181,12 +217,12 @@ function ProjectCard({ project, isVisible }) {
     <AnimatePresence>
       {isVisible && (
         <div ref={cardRef} className="w-full h-full overflow-y-auto">
-          {/* Main Futuristic Card */}
-          <div className="relative bg-gradient-to-br from-gray-900/95 via-black/90 to-gray-800/95 backdrop-blur-2xl border border-gray-600/30 rounded-2xl overflow-hidden shadow-2xl">
+          {/* Main Futuristic Card - Mobile Responsive */}
+          <div className="relative bg-gradient-to-br from-gray-900/95 via-black/90 to-gray-800/95 backdrop-blur-2xl border border-gray-600/30 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
             {/* Animated Border Effect */}
-            <div className="absolute inset-0 rounded-2xl">
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl">
               <div
-                className="absolute inset-0 rounded-2xl animate-pulse"
+                className="absolute inset-0 rounded-xl sm:rounded-2xl animate-pulse"
                 style={{
                   background: `linear-gradient(45deg, transparent, ${project.color}40, transparent)`,
                   filter: "blur(1px)",
@@ -194,22 +230,25 @@ function ProjectCard({ project, isVisible }) {
               />
             </div>
 
-            {/* Top Status Bar */}
-            <div className="relative flex items-center justify-between p-4 bg-gradient-to-r from-gray-800/80 to-gray-900/80 border-b border-gray-700/50">
-              <div className="flex items-center gap-3">
+            {/* Top Status Bar - Mobile Responsive */}
+            <div className="relative flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-gray-800/80 to-gray-900/80 border-b border-gray-700/50">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-500 animate-pulse"></div>
                   <div
-                    className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"
+                    className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 animate-pulse"
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                   <div
-                    className="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                    className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 animate-pulse"
                     style={{ animationDelay: "0.4s" }}
                   ></div>
                 </div>
-                <div className="text-xs text-gray-400 font-mono">
+                <div className="text-xs text-gray-400 font-mono hidden sm:block">
                   SYSTEM://PROJECTS/ACTIVE
+                </div>
+                <div className="text-xs text-gray-400 font-mono sm:hidden">
+                  SYS://ACTIVE
                 </div>
               </div>
               <div
@@ -224,12 +263,12 @@ function ProjectCard({ project, isVisible }) {
               </div>
             </div>
 
-            {/* Main Content */}
-            <div className="relative p-6 space-y-6">
-              {/* Project Title with Icon */}
-              <div className="flex items-start gap-4">
+            {/* Main Content - Mobile Responsive */}
+            <div className="relative p-4 sm:p-6 space-y-4 sm:space-y-6">
+              {/* Project Title with Icon - Mobile Layout */}
+              <div className="flex items-start gap-3 sm:gap-4">
                 <div
-                  className="text-4xl p-3 rounded-xl border"
+                  className="text-2xl sm:text-4xl p-2 sm:p-3 rounded-lg sm:rounded-xl border"
                   style={{
                     backgroundColor: `${project.color}10`,
                     borderColor: `${project.color}30`,
@@ -237,17 +276,19 @@ function ProjectCard({ project, isVisible }) {
                 >
                   {project.icon}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="text-xs text-gray-400 font-mono mb-1">
                     PROJECT_NAME:
                   </div>
                   <h3
                     ref={glitchRef}
-                    className="text-2xl font-bold text-white mb-2 font-mono"
+                    className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2 font-mono leading-tight"
                   >
                     {project.title.toUpperCase()}
                   </h3>
-                  <div className="text-sm text-gray-300">{project.summary}</div>
+                  <div className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                    {project.summary}
+                  </div>
                 </div>
               </div>
 
@@ -263,16 +304,16 @@ function ProjectCard({ project, isVisible }) {
                 />
               </div>
 
-              {/* Tech Stack Grid */}
+              {/* Tech Stack Grid - Mobile Responsive */}
               <div>
-                <div className="text-xs text-gray-400 font-mono mb-3">
+                <div className="text-xs text-gray-400 font-mono mb-2 sm:mb-3">
                   TECHNOLOGIES:
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {project.techStack.map((tech, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg border font-mono text-sm transition-all duration-300 hover:scale-105"
+                      className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border font-mono text-xs sm:text-sm transition-all duration-300 hover:scale-105"
                       style={{
                         backgroundColor: `${project.color}08`,
                         borderColor: `${project.color}30`,
@@ -280,7 +321,7 @@ function ProjectCard({ project, isVisible }) {
                       }}
                     >
                       <div
-                        className="w-2 h-2 rounded-full animate-pulse"
+                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full animate-pulse"
                         style={{ backgroundColor: project.color }}
                       />
                       {tech}
@@ -289,26 +330,29 @@ function ProjectCard({ project, isVisible }) {
                 </div>
               </div>
 
-              {/* Description Terminal */}
+              {/* Description Terminal - Mobile Responsive */}
               <div>
                 <div className="text-xs text-gray-400 font-mono mb-2">
                   DESCRIPTION:
                 </div>
-                <div className="bg-black/50 border border-gray-700/50 rounded-lg p-4 font-mono text-sm text-gray-300 leading-relaxed">
-                  <div className="text-green-400 text-xs mb-2">
+                <div className="bg-black/50 border border-gray-700/50 rounded-lg p-3 sm:p-4 font-mono text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  <div className="text-green-400 text-xs mb-2 hidden sm:block">
                     $ cat project_details.txt
+                  </div>
+                  <div className="text-green-400 text-xs mb-2 sm:hidden">
+                    $ cat details.txt
                   </div>
                   {project.description}
                 </div>
               </div>
 
-              {/* Preview Window */}
+              {/* Preview Window - Mobile Responsive */}
               <div>
                 <div className="text-xs text-gray-400 font-mono mb-2">
                   PREVIEW:
                 </div>
                 <div
-                  className="relative w-full h-24 rounded-lg border overflow-hidden"
+                  className="relative w-full h-16 sm:h-24 rounded-lg border overflow-hidden"
                   style={{
                     backgroundColor: `${project.color}05`,
                     borderColor: `${project.color}30`,
@@ -316,7 +360,7 @@ function ProjectCard({ project, isVisible }) {
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div
-                      className="text-3xl opacity-60 animate-pulse"
+                      className="text-2xl sm:text-3xl opacity-60 animate-pulse"
                       style={{ color: project.color }}
                     >
                       {project.icon}
@@ -335,10 +379,10 @@ function ProjectCard({ project, isVisible }) {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
+              {/* Action Buttons - Mobile Responsive */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
                 <button
-                  className="flex-1 py-3 px-4 rounded-lg font-mono text-sm font-bold border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden group"
+                  className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg font-mono text-xs sm:text-sm font-bold border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden group"
                   style={{
                     backgroundColor: "transparent",
                     borderColor: project.color,
@@ -354,14 +398,17 @@ function ProjectCard({ project, isVisible }) {
                     e.target.style.boxShadow = "none";
                   }}
                 >
-                  <div className="relative z-10">INIT_PROJECT.EXE</div>
+                  <div className="relative z-10">
+                    <span className="hidden sm:inline">INIT_PROJECT.EXE</span>
+                    <span className="sm:hidden">VIEW_PROJECT</span>
+                  </div>
                   <div
                     className="absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-500"
                     style={{ backgroundColor: `${project.color}10` }}
                   />
                 </button>
 
-                <button className="px-4 py-3 rounded-lg font-mono text-sm font-bold border border-gray-500 text-gray-300 hover:border-gray-300 hover:text-white hover:bg-gray-800/30 transition-all duration-300">
+                <button className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-mono text-xs sm:text-sm font-bold border border-gray-500 text-gray-300 hover:border-gray-300 hover:text-white hover:bg-gray-800/30 transition-all duration-300">
                   DEMO
                 </button>
               </div>
@@ -431,6 +478,7 @@ function StarField() {
 export default function Projects() {
   const titleRef = useRef();
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const responsive = useResponsiveValues();
 
   useEffect(() => {
     gsap.fromTo(
@@ -484,9 +532,9 @@ export default function Projects() {
         {/* 3D Canvas - Responsive */}
         <div className="flex-1 relative h-64 sm:h-80 lg:h-full">
           <Canvas
-            camera={{ 
-              position: [0, 0, window.innerWidth < 768 ? 15 : 10], 
-              fov: window.innerWidth < 768 ? 85 : 75 
+            camera={{
+              position: [0, 0, responsive.cameraDistance],
+              fov: responsive.cameraFov,
             }}
             style={{ height: "100%", background: "black" }}
           >
@@ -496,8 +544,7 @@ export default function Projects() {
             {/* Enhanced starfield with many more stars - Responsive density */}
             <Points
               positions={(() => {
-                const starCount = window.innerWidth < 768 ? 500 : 1000;
-                const positions = new Float32Array(starCount * 3);
+                const positions = new Float32Array(responsive.starCount * 3);
                 for (let i = 0; i < positions.length; i += 3) {
                   positions[i] = (Math.random() - 0.5) * 200; // x
                   positions[i + 1] = (Math.random() - 0.5) * 200; // y
@@ -511,7 +558,7 @@ export default function Projects() {
               <PointMaterial
                 transparent
                 color="#ffffff"
-                size={window.innerWidth < 768 ? 0.4 : 0.3}
+                size={responsive.starSize}
                 sizeAttenuation={false}
                 depthWrite={false}
                 opacity={0.8}
@@ -519,7 +566,7 @@ export default function Projects() {
             </Points>
 
             {/* Additional scattered bright stars - Fewer on mobile */}
-            {Array.from({ length: window.innerWidth < 768 ? 25 : 50 }, (_, i) => {
+            {Array.from({ length: responsive.brightStars }, (_, i) => {
               const x = (Math.random() - 0.5) * 150;
               const y = (Math.random() - 0.5) * 150;
               const z = (Math.random() - 0.5) * 150;
@@ -540,13 +587,13 @@ export default function Projects() {
             <group>
               {/* Sun core - Smaller on mobile */}
               <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[window.innerWidth < 768 ? 0.8 : 1.2, 32, 32]} />
+                <sphereGeometry args={[responsive.sunSize, 32, 32]} />
                 <meshBasicMaterial color="#ffaa00" transparent opacity={0.9} />
               </mesh>
 
               {/* Sun corona layers - Responsive */}
               <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[window.innerWidth < 768 ? 1.0 : 1.5, 16, 16]} />
+                <sphereGeometry args={[responsive.sunCorona1, 16, 16]} />
                 <meshBasicMaterial
                   color="#ff8800"
                   transparent
@@ -556,7 +603,7 @@ export default function Projects() {
               </mesh>
 
               <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[window.innerWidth < 768 ? 1.2 : 1.8, 16, 16]} />
+                <sphereGeometry args={[responsive.sunCorona2, 16, 16]} />
                 <meshBasicMaterial
                   color="#ffcc44"
                   transparent
@@ -572,17 +619,20 @@ export default function Projects() {
               // Responsive orbital spacing
               const mobileRadius = 2.5 + (i % 3) * 1.5;
               const desktopRadius = 4 + (i % 3) * 2.5;
-              const radius = window.innerWidth < 768 ? mobileRadius : desktopRadius;
-              
+              const radius = responsive.isMobile ? mobileRadius : desktopRadius;
+
               const x = Math.cos(angle) * radius;
               const z = Math.sin(angle) * radius;
               const isSelected = i === carouselIndex;
 
               // Responsive planet sizes
-              const baseSizes = [0.4, 0.35, 0.45, 0.3, 0.5, 0.55, 0.4, 0.35, 0.4, 0.35];
-              const mobileScale = 0.7;
-              const actualBaseSize = window.innerWidth < 768 ? baseSizes[i] * mobileScale : baseSizes[i];
-              const planetSize = isSelected ? actualBaseSize + 0.15 : actualBaseSize;
+              const baseSizes = [
+                0.4, 0.35, 0.45, 0.3, 0.5, 0.55, 0.4, 0.35, 0.4, 0.35,
+              ];
+              const actualBaseSize = baseSizes[i] * responsive.planetScale;
+              const planetSize = isSelected
+                ? actualBaseSize + 0.15
+                : actualBaseSize;
 
               return (
                 <group key={i}>
@@ -640,7 +690,7 @@ export default function Projects() {
                   )}
 
                   {/* Planet rings - Only on larger screens */}
-                  {(i + 1) % 3 === 0 && window.innerWidth >= 768 && (
+                  {(i + 1) % 3 === 0 && !responsive.isMobile && (
                     <mesh
                       position={[x, 0, z]}
                       rotation={[Math.PI / 6, 0, Math.PI / 8]}
@@ -658,7 +708,7 @@ export default function Projects() {
                   )}
 
                   {/* Moons - Only on larger screens */}
-                  {baseSizes[i] > 0.4 && window.innerWidth >= 768 && (
+                  {baseSizes[i] > 0.4 && !responsive.isMobile && (
                     <mesh position={[x + planetSize + 0.4, 0, z]}>
                       <sphereGeometry args={[0.08, 8, 8]} />
                       <meshBasicMaterial color="#cccccc" />
@@ -683,10 +733,10 @@ export default function Projects() {
               enableZoom={true}
               enableRotate={true}
               autoRotate={true}
-              autoRotateSpeed={window.innerWidth < 768 ? 0.5 : 1}
-              enablePan={window.innerWidth >= 768}
-              minDistance={window.innerWidth < 768 ? 8 : 5}
-              maxDistance={window.innerWidth < 768 ? 25 : 30}
+              autoRotateSpeed={responsive.autoRotateSpeed}
+              enablePan={responsive.enablePan}
+              minDistance={responsive.minDistance}
+              maxDistance={responsive.maxDistance}
             />
           </Canvas>
         </div>{" "}
@@ -714,7 +764,9 @@ export default function Projects() {
                   <div
                     key={index}
                     className={`h-1 rounded-full transition-all duration-500 cursor-pointer flex-shrink-0 ${
-                      index === carouselIndex ? "w-6 sm:w-8" : "w-2 hover:w-3 sm:hover:w-4"
+                      index === carouselIndex
+                        ? "w-6 sm:w-8"
+                        : "w-2 hover:w-3 sm:hover:w-4"
                     }`}
                     style={{
                       backgroundColor:
@@ -753,8 +805,12 @@ export default function Projects() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative flex items-center justify-center gap-1 sm:gap-2 text-gray-300 group-hover:text-white">
-                    <div className="text-blue-400 text-lg sm:text-xl font-mono">‹</div>
-                    <span className="font-mono font-bold text-sm sm:text-base">PREV</span>
+                    <div className="text-blue-400 text-lg sm:text-xl font-mono">
+                      ‹
+                    </div>
+                    <span className="font-mono font-bold text-sm sm:text-base">
+                      PREV
+                    </span>
                   </div>
                 </button>
 
@@ -764,8 +820,12 @@ export default function Projects() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative flex items-center justify-center gap-1 sm:gap-2 text-gray-300 group-hover:text-white">
-                    <span className="font-mono font-bold text-sm sm:text-base">NEXT</span>
-                    <div className="text-cyan-400 text-lg sm:text-xl font-mono">›</div>
+                    <span className="font-mono font-bold text-sm sm:text-base">
+                      NEXT
+                    </span>
+                    <div className="text-cyan-400 text-lg sm:text-xl font-mono">
+                      ›
+                    </div>
                   </div>
                 </button>
               </div>
@@ -790,9 +850,14 @@ export default function Projects() {
       {/* Instructions - Mobile Responsive */}
       <div className="absolute bottom-4 sm:bottom-6 lg:bottom-10 left-1/2 transform -translate-x-1/2 text-center z-10 px-4 w-full max-w-4xl">
         <p className="text-xs sm:text-sm text-gray-400 mb-2 font-mono">
-          <span className="hidden sm:inline">🖱️ DRAG_TO_ROTATE • 🔍 SCROLL_TO_ZOOM • </span>
-          <span className="sm:hidden">👆 TAP_PLANETS • 📱 PINCH_TO_ZOOM • </span>
-          ✨ <span className="hidden sm:inline">CLICK</span><span className="sm:hidden">TAP</span>_PLANETS_TO_EXPLORE
+          <span className="hidden sm:inline">
+            🖱️ DRAG_TO_ROTATE • 🔍 SCROLL_TO_ZOOM •{" "}
+          </span>
+          <span className="sm:hidden">
+            👆 TAP_PLANETS • 📱 PINCH_TO_ZOOM •{" "}
+          </span>
+          ✨ <span className="hidden sm:inline">CLICK</span>
+          <span className="sm:hidden">TAP</span>_PLANETS_TO_EXPLORE
         </p>
         <div className="flex justify-center gap-3 sm:gap-6 text-xs flex-wrap">
           <div className="flex items-center gap-1 sm:gap-2">
