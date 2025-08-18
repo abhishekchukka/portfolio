@@ -2,9 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Animated starfield background for footer
 function FooterStarfield() {
@@ -35,10 +32,10 @@ function FooterStarfield() {
       <PointMaterial
         transparent
         color="#ffaa00"
-        size={0.3}
+        size={0.2}
         sizeAttenuation={false}
         depthWrite={false}
-        opacity={0.6}
+        opacity={0.3}
       />
     </Points>
   );
@@ -112,21 +109,11 @@ function Footer() {
 
   useEffect(() => {
     if (!isMobile && footerRef.current) {
-      gsap.fromTo(
-        footerRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      // Removed ScrollTrigger animation to fix sticky behavior on mobile
+      gsap.set(footerRef.current, {
+        opacity: 1,
+        y: 0,
+      });
     }
   }, [isMobile]);
 
@@ -141,9 +128,9 @@ function Footer() {
     >
       {/* 3D Background - Hidden on mobile for performance */}
       {!isMobile && (
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 opacity-20">
           <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-            <ambientLight intensity={0.5} />
+            <ambientLight intensity={0.1} />
             <FooterStarfield />
           </Canvas>
         </div>
@@ -155,11 +142,11 @@ function Footer() {
       )}
 
       {/* Animated grid overlay */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-5">
         <div
           className="w-full h-full"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.3) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.2) 1px, transparent 0)`,
             backgroundSize: "30px 30px",
           }}
         />
@@ -261,12 +248,6 @@ function Footer() {
                   boxShadow: "0 0 20px rgba(0,0,0,0.5)",
                 }}
               >
-                {/* Background glow effect */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"
-                  style={{ backgroundColor: social.color }}
-                />
-
                 <div className="relative z-10 text-center">
                   <div className="text-2xl mb-2">{social.icon}</div>
                   <div className="text-sm font-semibold text-white mb-1">
