@@ -522,9 +522,12 @@ export default function Projects() {
         >
           .PROJECTS
         </h2>
-        <p className="text-sm sm:text-base lg:text-lg text-gray-300 text-center max-w-2xl font-mono">
-          Navigate through my digital universe
-        </p>
+        {/* Hide subtitle on mobile to prevent overlapping */}
+        {!responsive.isMobile && (
+          <p className="text-sm sm:text-base lg:text-lg text-gray-300 text-center max-w-2xl font-mono">
+            Navigate through my digital universe
+          </p>
+        )}
       </div>
 
       {/* Layout Container - Responsive */}
@@ -760,18 +763,21 @@ export default function Projects() {
           <div className="h-full flex flex-col max-h-screen overflow-hidden">
             {/* Header - Responsive */}
             <div className="mb-3 sm:mb-4">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h3 className="text-lg sm:text-xl font-bold text-white font-mono">
-                  NAVIGATION_SYSTEM
-                </h3>
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <div
-                    className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"
-                    style={{ animationDelay: "0.5s" }}
-                  ></div>
+              {/* Navigation title - Hidden on mobile */}
+              {!responsive.isMobile && (
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  {/* <h3 className="text-lg sm:text-xl font-bold text-white font-mono">
+                    NAVIGATION_SYSTEM
+                  </h3> */}
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <div
+                      className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"
+                      style={{ animationDelay: "0.5s" }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Progress Indicators - More responsive */}
               <div className="flex gap-1 mb-3 sm:mb-4 overflow-x-auto pb-1">
@@ -862,37 +868,32 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Instructions - Mobile Responsive */}
-      <div className="absolute bottom-4 sm:bottom-6 lg:bottom-10 left-1/2 transform -translate-x-1/2 text-center z-10 px-4 w-full max-w-4xl">
-        <p className="text-xs sm:text-sm text-gray-400 mb-2 font-mono">
-          <span className="hidden sm:inline">
-            🖱️ DRAG_TO_ROTATE • 🔍 SCROLL_TO_ZOOM •{" "}
-          </span>
-          <span className="sm:hidden">
-            👆 TAP_PLANETS • 📱 PINCH_TO_ZOOM •{" "}
-          </span>
-          ✨ <span className="hidden sm:inline">CLICK</span>
-          <span className="sm:hidden">TAP</span>_PLANETS_TO_EXPLORE
-        </p>
-        <div className="flex justify-center gap-3 sm:gap-6 text-xs flex-wrap">
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#ffaa00]"></div>
-            <span className="text-gray-500 font-mono">WEB_DEV</span>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00ff88]"></div>
-            <span className="text-gray-500 font-mono">AI_ML</span>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#87ceeb]"></div>
-            <span className="text-gray-500 font-mono">FULLSTACK</span>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#ff6b35]"></div>
-            <span className="text-gray-500 font-mono">CLIENT_WORK</span>
+      {/* Instructions - Desktop only */}
+      {!responsive.isMobile && (
+        <div className="absolute bottom-4 sm:bottom-6 lg:bottom-10 left-1/2 transform -translate-x-1/2 text-center z-10 px-4 w-full max-w-4xl">
+          <p className="text-xs sm:text-sm text-gray-400 mb-2 font-mono">
+            🖱️ DRAG_TO_ROTATE • 🔍 SCROLL_TO_ZOOM • ✨ CLICK_PLANETS_TO_EXPLORE
+          </p>
+          <div className="flex justify-center gap-3 sm:gap-6 text-xs flex-wrap">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#ffaa00]"></div>
+              <span className="text-gray-500 font-mono">WEB_DEV</span>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#00ff88]"></div>
+              <span className="text-gray-500 font-mono">AI_ML</span>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#87ceeb]"></div>
+              <span className="text-gray-500 font-mono">FULLSTACK</span>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#ff6b35]"></div>
+              <span className="text-gray-500 font-mono">CLIENT_WORK</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

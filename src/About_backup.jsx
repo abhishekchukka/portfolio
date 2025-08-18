@@ -1,40 +1,43 @@
 import { useRef, useEffect, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Animated Card Component with mobile-optimized animations
+// Earth Hologram Component for background
+function EarthHologram() {
+  const { scene } = useGLTF("/earth_hologram.glb");
+  const meshRef = useRef();
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+      meshRef.current.position.y =
+        Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
+    }
+  });
+
+  return (
+    <primitive
+      ref={meshRef}
+      object={scene}
+      scale={[1, 0.9, 1]}
+      position={[-1, 11, -10]}
+    />
+  );
+}
+
+// Animated Card Component
 function Card({ children, className = "", delay = 0, direction = "up" }) {
   const cardRef = useRef();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   useEffect(() => {
     if (cardRef.current) {
-      // Reduced animations for mobile
-      const startY = isMobile
-        ? 30
-        : direction === "up"
-        ? 80
-        : direction === "down"
-        ? -80
-        : 0;
-      const startX = isMobile
-        ? 0
-        : direction === "left"
-        ? 80
-        : direction === "right"
-        ? -80
-        : 0;
+      const startY = direction === "up" ? 80 : direction === "down" ? -80 : 0;
+      const startX =
+        direction === "left" ? 80 : direction === "right" ? -80 : 0;
 
       gsap.fromTo(
         cardRef.current,
@@ -42,16 +45,16 @@ function Card({ children, className = "", delay = 0, direction = "up" }) {
           opacity: 0,
           y: startY,
           x: startX,
-          scale: isMobile ? 0.95 : 0.9,
+          scale: 0.9,
         },
         {
           opacity: 1,
           y: 0,
           x: 0,
           scale: 1,
-          duration: isMobile ? 0.6 : 1.2, // Shorter duration on mobile
+          duration: 1.2,
           delay: delay,
-          ease: isMobile ? "power1.out" : "power3.out", // Simpler easing on mobile
+          ease: "power3.out",
           scrollTrigger: {
             trigger: cardRef.current,
             start: "top 85%",
@@ -59,7 +62,7 @@ function Card({ children, className = "", delay = 0, direction = "up" }) {
         }
       );
     }
-  }, [delay, direction, isMobile]);
+  }, [delay, direction]);
 
   return (
     <div
@@ -104,227 +107,6 @@ function TechBadge({ tech, index }) {
       className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-[#ffaa00]/20 to-[#87ceeb]/20 border border-[#ffaa00]/30 rounded-full text-sm font-medium text-white hover:from-[#ffaa00]/30 hover:to-[#87ceeb]/30 transition-all duration-300 cursor-pointer"
     >
       {tech}
-    </div>
-  );
-}
-
-// Mobile Journey Cards Component - Enhanced card-tap experience
-function MobileJourneyCards({ experiences }) {
-  const [activeCard, setActiveCard] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-
-  // Handle swipe gestures
-  const handleTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && activeCard < experiences.length - 1) {
-      setActiveCard(activeCard + 1);
-    }
-    if (isRightSwipe && activeCard > 0) {
-      setActiveCard(activeCard - 1);
-    }
-  };
-
-  const getCardColor = (type) => {
-    switch (type) {
-      case "internship":
-        return "#ffaa00";
-      case "freelance":
-        return "#87ceeb";
-      case "fulltime":
-        return "#ff6b35";
-      default:
-        return "#ffaa00";
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      {/* Progress indicators */}
-      <div className="flex justify-center gap-2 mb-6">
-        {experiences.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveCard(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              activeCard === index ? "bg-[#ffaa00] scale-150" : "bg-gray-600"
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Main card */}
-      <div className="relative h-80 overflow-hidden rounded-xl">
-        <div
-          className="flex transition-transform duration-300 ease-out h-full"
-          style={{ transform: `translateX(-${activeCard * 100}%)` }}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {experiences.map((exp, index) => (
-            <div key={index} className="min-w-full h-full px-2">
-              <div
-                className="h-full p-6 rounded-xl bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-700 relative overflow-hidden"
-                style={{
-                  borderColor: `${getCardColor(exp.type)}40`,
-                  boxShadow: `0 0 30px ${getCardColor(exp.type)}20`,
-                }}
-              >
-                {/* Background accent */}
-                <div
-                  className="absolute top-0 right-0 w-20 h-20 rounded-full blur-xl opacity-20"
-                  style={{ backgroundColor: getCardColor(exp.type) }}
-                />
-
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-4 h-4 rounded-full animate-pulse"
-                      style={{ backgroundColor: getCardColor(exp.type) }}
-                    />
-                    <div>
-                      <span
-                        className="text-sm font-medium px-2 py-1 rounded-full"
-                        style={{
-                          backgroundColor: `${getCardColor(exp.type)}20`,
-                          color: getCardColor(exp.type),
-                        }}
-                      >
-                        {exp.period}
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-gray-400 text-sm">
-                    {index + 1}/{experiences.length}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-4">
-                  <div>
-                    <h3
-                      className="text-xl font-bold mb-1"
-                      style={{ color: getCardColor(exp.type) }}
-                    >
-                      {exp.role}
-                    </h3>
-                    <p className="text-gray-300 font-medium">{exp.company}</p>
-                  </div>
-
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {exp.description}
-                  </p>
-
-                  {/* Skills tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {exp.skills.slice(0, 6).map((skill, skillIndex) => (
-                      <span
-                        key={skillIndex}
-                        className="px-3 py-1 bg-gray-800/80 text-gray-300 text-xs rounded-full border border-gray-700"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                    {exp.skills.length > 6 && (
-                      <span className="px-3 py-1 bg-gray-700/80 text-gray-400 text-xs rounded-full">
-                        +{exp.skills.length - 6}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Swipe hint for first card */}
-                {index === 0 && activeCard === 0 && (
-                  <div className="absolute bottom-4 right-4 text-xs text-gray-500 flex items-center gap-1">
-                    <span>Swipe</span>
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Navigation arrows */}
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={() => setActiveCard(Math.max(0, activeCard - 1))}
-          disabled={activeCard === 0}
-          className={`p-3 rounded-full border transition-all duration-300 ${
-            activeCard === 0
-              ? "border-gray-700 text-gray-600 cursor-not-allowed"
-              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10"
-          }`}
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-
-        <button
-          onClick={() =>
-            setActiveCard(Math.min(experiences.length - 1, activeCard + 1))
-          }
-          disabled={activeCard === experiences.length - 1}
-          className={`p-3 rounded-full border transition-all duration-300 ${
-            activeCard === experiences.length - 1
-              ? "border-gray-700 text-gray-600 cursor-not-allowed"
-              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10"
-          }`}
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
     </div>
   );
 }
@@ -623,8 +405,63 @@ function VerticalTimeline() {
       }`}
     >
       {isMobile ? (
-        // Mobile Layout - Enhanced card-tap based journey
-        <MobileJourneyCards experiences={experiences} />
+        // Mobile Layout - Simplified stacked cards
+        <div className="space-y-4">
+          {experiences.map((exp, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg border transition-all duration-300 ${
+                activeIndex === index
+                  ? "border-[#ffaa00] bg-[#ffaa00]/5"
+                  : "border-gray-700 bg-gray-900/50"
+              }`}
+              onClick={() => setActiveIndex(index)}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    exp.type === "internship"
+                      ? "bg-[#ffaa00]"
+                      : exp.type === "freelance"
+                      ? "bg-[#87ceeb]"
+                      : "bg-[#ff6b35]"
+                  }`}
+                />
+                <div>
+                  <h4 className="text-white font-semibold text-sm">
+                    {exp.role}
+                  </h4>
+                  <p className="text-gray-400 text-xs">
+                    {exp.company} • {exp.period}
+                  </p>
+                </div>
+              </div>
+
+              {activeIndex === index && (
+                <div className="mt-3 pt-3 border-t border-gray-700">
+                  <p className="text-gray-300 text-sm mb-3">
+                    {exp.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {exp.skills.slice(0, 4).map((skill, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                    {exp.skills.length > 4 && (
+                      <span className="text-gray-400 text-xs">
+                        +{exp.skills.length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       ) : (
         // Desktop Layout - Original timeline design
         <>
@@ -729,8 +566,8 @@ function About() {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: isMobile ? 0.8 : 1.5, // Shorter duration on mobile
-        ease: isMobile ? "power2.out" : "power3.out", // Simpler easing on mobile
+        duration: 1.5,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: titleRef.current,
           start: "top 80%",
@@ -746,16 +583,16 @@ function About() {
       },
       {
         scaleX: 1,
-        duration: isMobile ? 0.8 : 1.5, // Shorter duration on mobile
-        delay: isMobile ? 0.2 : 0.5, // Shorter delay on mobile
-        ease: isMobile ? "power2.out" : "power3.out", // Simpler easing on mobile
+        duration: 1.5,
+        delay: 0.5,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: lineRef.current,
           start: "top 80%",
         },
       }
     );
-  }, [isMobile]);
+  }, []);
 
   return (
     <section
@@ -763,34 +600,35 @@ function About() {
       id="about"
       className="relative min-h-screen bg-black text-white py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
-      {/* Starry Background - Always visible, no 3D components */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
-        {/* Animated stars */}
-        <div className="absolute inset-0">
-          {[...Array(isMobile ? 30 : 50)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`,
-              }}
-            />
-          ))}
+      {/* Background Canvas with Hologram - Only for laptop/desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-0 opacity-20">
+          <Canvas
+            camera={{ position: [0, 0, 1], fov: 75 }}
+            style={{ background: "transparent" }}
+          >
+            <EarthHologram />
+            <ambientLight intensity={0.3} />
+            <directionalLight position={[0, 30, 5]} intensity={1} />
+            <pointLight position={[10, 10, 10]} intensity={0.5} />
+          </Canvas>
         </div>
+      )}
 
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.3) 1px, transparent 0)`,
-              backgroundSize: isMobile ? "20px 20px" : "40px 40px",
-            }}
-          />
-        </div>
+      {/* Simple gradient background for mobile */}
+      {isMobile && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/30 via-black/50 to-gray-800/30"></div>
+      )}
+
+      {/* Background texture overlay - Different intensity for mobile vs desktop */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.3) 1px, transparent 0)`,
+            backgroundSize: isMobile ? "20px 20px" : "40px 40px",
+          }}
+        ></div>
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -997,4 +835,5 @@ function About() {
   );
 }
 
+useGLTF.preload("/earth_hologram.glb");
 export default About;
