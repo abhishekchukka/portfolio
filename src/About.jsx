@@ -827,31 +827,175 @@ function About() {
       id="about"
       className="relative min-h-screen bg-black text-white py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
-      {/* Starry Background - Always visible, no 3D components */}
+      {/* CSS Animations for enhanced background effects */}
+      <style jsx>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          25% {
+            transform: translateY(-10px) translateX(5px);
+          }
+          50% {
+            transform: translateY(0px) translateX(10px);
+          }
+          75% {
+            transform: translateY(10px) translateX(5px);
+          }
+        }
+
+        @keyframes shootingStar {
+          0% {
+            transform: translateX(-100px) translateY(0px);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(calc(100vw + 100px)) translateY(-100px);
+            opacity: 0;
+          }
+        }
+
+        @keyframes twinkle {
+          0%,
+          100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.2);
+          }
+        }
+      `}</style>
+      {/* Enhanced Starry Background with colorful lights */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
-        {/* Animated stars */}
+        {/* Animated stars with different colors */}
         <div className="absolute inset-0">
-          {[...Array(isMobile ? 30 : 50)].map((_, i) => (
+          {[...Array(isMobile ? 40 : 80)].map((_, i) => {
+            const colors = [
+              "#ffaa00",
+              "#87ceeb",
+              "#ff6b35",
+              "#00ff88",
+              "#ff69b4",
+              "#9d4edd",
+              "#ffffff",
+            ];
+            const randomColor =
+              colors[Math.floor(Math.random() * colors.length)];
+            const isLargeStarr = Math.random() > 0.8;
+
+            return (
+              <div
+                key={i}
+                className={`absolute rounded-full animate-pulse ${
+                  isLargeStarr ? "w-2 h-2" : "w-1 h-1"
+                }`}
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  backgroundColor: randomColor,
+                  boxShadow: `0 0 ${
+                    isLargeStarr ? "8px" : "4px"
+                  } ${randomColor}`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${2 + Math.random() * 2}s`,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Floating light orbs */}
+        <div className="absolute inset-0">
+          {[...Array(isMobile ? 5 : 8)].map((_, i) => {
+            const colors = ["#ffaa00", "#87ceeb", "#ff6b35", "#00ff88"];
+            const randomColor =
+              colors[Math.floor(Math.random() * colors.length)];
+
+            return (
+              <div
+                key={`orb-${i}`}
+                className="absolute w-4 h-4 rounded-full opacity-30 animate-pulse"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  backgroundColor: randomColor,
+                  boxShadow: `0 0 20px ${randomColor}, 0 0 40px ${randomColor}`,
+                  animation: `float ${
+                    8 + Math.random() * 4
+                  }s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 5}s`,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Shooting stars */}
+        <div className="absolute inset-0">
+          {[...Array(isMobile ? 2 : 4)].map((_, i) => (
             <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+              key={`shooting-${i}`}
+              className="absolute w-1 h-1 bg-white rounded-full opacity-0"
               style={{
                 left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`,
+                top: `${Math.random() * 50}%`,
+                animation: `shootingStar ${
+                  3 + Math.random() * 2
+                }s linear infinite`,
+                animationDelay: `${Math.random() * 10}s`,
+                boxShadow: "0 0 6px #ffffff, 0 0 12px #87ceeb",
               }}
             />
           ))}
         </div>
 
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-10">
+        {/* Enhanced grid overlay with subtle color variation */}
+        <div className="absolute inset-0 opacity-5">
           <div
             className="w-full h-full"
             style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.3) 1px, transparent 0)`,
-              backgroundSize: isMobile ? "20px 20px" : "40px 40px",
+              backgroundImage: `
+                radial-gradient(circle at 1px 1px, rgba(255,170,0,0.4) 1px, transparent 0),
+                radial-gradient(circle at 20px 20px, rgba(135,206,235,0.3) 1px, transparent 0),
+                radial-gradient(circle at 40px 10px, rgba(255,107,53,0.3) 1px, transparent 0)
+              `,
+              backgroundSize: isMobile
+                ? "20px 20px, 40px 40px, 60px 60px"
+                : "40px 40px, 80px 80px, 120px 120px",
+            }}
+          />
+        </div>
+
+        {/* Nebula-like gradient overlays */}
+        <div className="absolute inset-0">
+          <div
+            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-5 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, #ffaa00 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-5 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, #87ceeb 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full opacity-5 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, #ff6b35 0%, transparent 70%)",
             }}
           />
         </div>
@@ -1048,9 +1192,9 @@ function About() {
                   <button className="px-6 lg:px-8 py-3 bg-gradient-to-r from-[#ffaa00] to-[#ff8800] text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-[#ffaa00]/30 transition-all duration-300 hover:scale-105">
                     Get In Touch
                   </button>
-                  <button className="px-6 lg:px-8 py-3 border border-[#87ceeb] text-[#87ceeb] font-semibold rounded-lg hover:bg-[#87ceeb]/10 transition-all duration-300 hover:scale-105">
+                  {/* <button className="px-6 lg:px-8 py-3 border border-[#87ceeb] text-[#87ceeb] font-semibold rounded-lg hover:bg-[#87ceeb]/10 transition-all duration-300 hover:scale-105">
                     View My Work
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

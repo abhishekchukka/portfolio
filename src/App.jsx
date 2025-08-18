@@ -9,6 +9,8 @@ import { SunModel } from "./SunModel";
 import { AstronautModel } from "./AstronautModel";
 import About from "./About";
 import Projects from "../Projects";
+import Contact from "./Contact";
+import Footer from "./footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,42 +116,42 @@ function Hero() {
   );
 
   useEffect(() => {
-    // Enhanced name animation with glitch effect
+    // Enhanced name animation with glitch effect - synced with camera zoom
     const tl = gsap.timeline();
 
-    tl.fromTo(
-      nameRef.current,
-      {
-        opacity: 0,
-        y: 50,
-        scale: 0.8,
-        rotationX: 90,
+    // Initial state - make name visible but transparent
+    gsap.set(nameRef.current, {
+      opacity: 0,
+      y: 50,
+      scale: 0.8,
+      rotationX: 90,
+    });
+
+    // Start name animation after camera starts zooming back in (2 seconds delay)
+    tl.to(nameRef.current, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotationX: 0,
+      duration: 2,
+      delay: 2, // Reduced from 3 to 2 to sync with camera zoom in
+      ease: "back.out(1.7)",
+      onComplete: () => {
+        // Glitch effect
+        gsap.to(nameRef.current, {
+          x: 2,
+          duration: 0.1,
+          repeat: 5,
+          yoyo: true,
+          ease: "power2.inOut",
+        });
+
+        // Show subtitles after name animation
+        setTimeout(() => setShowSubtitles(true), 300);
       },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        rotationX: 0,
-        duration: 2,
-        delay: 3,
-        ease: "back.out(1.7)",
-        onComplete: () => {
-          // Glitch effect
-          gsap.to(nameRef.current, {
-            x: 2,
-            duration: 0.1,
-            repeat: 5,
-            yoyo: true,
-            ease: "power2.inOut",
-          });
+    });
 
-          // Show subtitles after name animation
-          setTimeout(() => setShowSubtitles(true), 500);
-        },
-      }
-    );
-
-    // Animate icons with stagger and bounce
+    // Animate icons with stagger and bounce - start after name completes
     gsap.fromTo(
       iconsRef.current.children,
       {
@@ -164,13 +166,9 @@ function Hero() {
         scale: 1,
         rotation: 0,
         duration: 1.2,
-        stagger: 0.3,
-        delay: 5,
+        stagger: 0.2,
+        delay: 4.5, // Start after name animation completes (2 delay + 2 duration + 0.5 buffer)
         ease: "elastic.out(1, 0.5)",
-        scrollTrigger: {
-          trigger: iconsRef.current,
-          start: "top 80%",
-        },
       }
     );
   }, []);
@@ -202,7 +200,7 @@ function Hero() {
       <div className="text-center mb-8">
         <h1
           ref={nameRef}
-          className="text-4xl md:text-6xl lg:text-8xl font-black tracking-widest mb-4 relative"
+          className="text-4xl md:text-6xl lg:text-8xl font-black tracking-widest mb-4 relative opacity-0"
           style={{
             background:
               "linear-gradient(45deg, #ffaa00, #ff6b35, #ffffff, #87ceeb)",
@@ -215,6 +213,7 @@ function Hero() {
               "0 0 40px rgba(255, 170, 0, 0.6), 0 0 80px rgba(255, 107, 53, 0.3)",
             fontFamily: '"Orbitron", "Arial Black", sans-serif',
             filter: "drop-shadow(0 0 20px rgba(255, 170, 0, 0.5))",
+            transform: "translateY(50px) scale(0.8) rotateX(90deg)",
           }}
         >
           ABHISHEK CHUKKA
@@ -265,9 +264,19 @@ function Hero() {
         ref={iconsRef}
         className="flex gap-3 sm:gap-6 mt-8 sm:mt-12 pointer-events-auto"
       >
-        {["Portfolio", "About", "Contact"].map((item) => (
+        {[
+          { name: "About", href: "#about" },
+          { name: "Projects", href: "#projects" },
+          { name: "Contact", href: "#contact" },
+        ].map((item) => (
           <button
-            key={item}
+            key={item.name}
+            onClick={() => {
+              const element = document.querySelector(item.href);
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
             className="group relative px-4 py-2 sm:px-8 sm:py-3 border-2 font-mono text-xs sm:text-sm tracking-wide sm:tracking-widest overflow-hidden transition-all duration-300 hover:scale-110"
             style={{
               borderColor: "#ffaa00",
@@ -302,7 +311,7 @@ function Hero() {
               }}
             />
             <span className="relative z-10 group-hover:text-white transition-colors duration-300">
-              {item}
+              {item.name}
             </span>
 
             {/* Corner decorations with space theme */}
@@ -428,7 +437,7 @@ export default function App() {
         }
       `}</style>
 
-      <div className="w-full h-screen relative bg-black">
+      <div className="w-full h-screen relative bg-black" id="home">
         <Canvas
           camera={{ position: [0, 0, 1], fov: 75 }}
           shadows
@@ -478,6 +487,8 @@ export default function App() {
         <div className=" bg-black"></div>
         <About />
         <Projects />
+        <Contact />
+        <Footer />
       </div>
     </>
   );

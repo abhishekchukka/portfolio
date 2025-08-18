@@ -5,6 +5,18 @@ import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import * as THREE from "three";
 
+// Import project images
+import blogsImg from "./src/assets/projectimg/blogs.png";
+import youtubeCloneImg from "./src/assets/projectimg/youtubeclone.png";
+import fitnessGenImg from "./src/assets/projectimg/fitness gen.png";
+import soloLevelingImg from "./src/assets/projectimg/sololeveling.png";
+import connectPlatformImg from "./src/assets/projectimg/connect platform.png";
+import ecommerceImg from "./src/assets/projectimg/ecommerce.png";
+import aiItineraryImg from "./src/assets/projectimg/ai itenary planner.png";
+import aiNewsCrawlerImg from "./src/assets/projectimg/ai news crawler.png";
+import hotelComplaintImg from "./src/assets/projectimg/hotel complaint classification.png";
+import daycareImg from "./src/assets/projectimg/Screenshot 2025-08-18 204211.png";
+
 // Custom hook for responsive values
 function useResponsiveValues() {
   const [isMobile, setIsMobile] = useState(false);
@@ -49,8 +61,8 @@ const projects = [
     techStack: ["React", "Firebase", "Tailwind CSS"],
     description:
       "A full-stack blogging platform with a sleek UI that allows users to create, edit, and manage blog posts. Integrated Firebase authentication ensures secure login while CRUD functionality provides smooth content management. Designed to be scalable for personal blogging or community-driven platforms.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/blog-app",
+    image: blogsImg,
+    link: "https://github.com/abhishekchukka/blogs",
     color: "#ffaa00",
     icon: "📖",
   },
@@ -61,8 +73,8 @@ const projects = [
     techStack: ["React", "RapidAPI", "Material UI", "React Router"],
     description:
       "A modern clone of YouTube leveraging RapidAPI for video data. The platform supports authentication, video browsing, and search, offering a seamless streaming experience with React Router for navigation and Material UI for a polished interface.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/youtube-clone",
+    image: youtubeCloneImg,
+    link: "https://github.com/abhishekchukka/youtubecl",
     color: "#ff4444",
     icon: "▶️",
   },
@@ -73,8 +85,8 @@ const projects = [
     techStack: ["React", "Express.js", "Gemini API"],
     description:
       "An AI-powered fitness and meal recommendation system that generates tailored workout plans and recipes based on user details. The backend API integrates with Gemini to deliver smart, personalized health insights.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/fitness-gen",
+    image: fitnessGenImg,
+    link: "https://github.com/abhishekchukka/fitness-generator",
     color: "#00ff88",
     icon: "💪",
   },
@@ -85,7 +97,7 @@ const projects = [
     techStack: ["React", "Local Storage"],
     description:
       "A movie discovery app that lets users search for films, save favorites, and rate them locally. Focused on simplicity and exploring React concepts, it marked the beginning of your React journey.",
-    image: "/api/placeholder/400/250",
+    image: soloLevelingImg,
     link: "https://github.com/yourusername/movie-app",
     color: "#9d4edd",
     icon: "🎬",
@@ -97,8 +109,8 @@ const projects = [
     techStack: ["React", "Node.js", "Express.js", "MongoDB", "Firebase Auth"],
     description:
       "A futuristic campus platform designed to solve real student struggles. From forming study groups and finding help with assignments to earning money through micro-tasks, Campus Connect makes college life easier. To ensure authenticity, groups cost ₹2 to create, keeping spam away. Soon to evolve into a mini-LinkedIn for showcasing student skills.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/campus-connect",
+    image: connectPlatformImg,
+    link: "https://github.com/abhishekchukka/connect",
     color: "#87ceeb",
     icon: "🎭",
   },
@@ -117,8 +129,8 @@ const projects = [
     ],
     description:
       "A full-fledged e-commerce application built with separate Admin and Customer dashboards. Admins manage products, inventory, and orders, while customers can browse, add to cart, and make purchases securely. The backend is designed to handle scalable transactions and order flows.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/ecommerce-platform",
+    image: ecommerceImg,
+    link: "https://github.com/abhishekchukka/ecommerce-1",
     color: "#06d6a0",
     icon: "🛍️",
   },
@@ -129,8 +141,8 @@ const projects = [
     techStack: ["Streamlit", "Gemini Flash API", "Python"],
     description:
       "A smart travel itinerary generator built with Streamlit and Gemini Flash API. It tailors trip schedules based on user preferences, location, and time, providing an AI-powered, instant travel companion.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/itinerary-generator",
+    image: aiItineraryImg,
+    link: "https://github.com/abhishekchukka/itinerary-planner",
     color: "#ff6b35",
     icon: "🌍",
   },
@@ -141,8 +153,8 @@ const projects = [
     techStack: ["Python", "BeautifulSoup", "Word2Vec", "ANN", "Scikit-learn"],
     description:
       "A news classification engine using Word2Vec embeddings and a simple ANN model to classify articles. Combined with a web crawler built in BeautifulSoup, it automatically scrapes fresh articles and classifies them in real time.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/ai-news-classifier",
+    image: aiNewsCrawlerImg,
+    link: "https://github.com/abhishekchukka/news-crawler-classification",
     color: "#4ecdc4",
     icon: "📰",
   },
@@ -153,8 +165,8 @@ const projects = [
     techStack: ["PyTorch", "Python", "NLP", "Scikit-learn"],
     description:
       "A machine learning pipeline for classifying hotel complaints into categories using NLP and PyTorch. It automates complaint management for hospitality businesses, improving customer experience by quickly identifying the root cause.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/hotel-complaint-nlp",
+    image: hotelComplaintImg,
+    link: "https://github.com/abhishekchukka/complaint-classification",
     color: "#f7931e",
     icon: "🏨",
   },
@@ -165,8 +177,8 @@ const projects = [
     techStack: ["Next.js", "React", "Tailwind CSS"],
     description:
       "A professional client project built with Next.js to showcase a daycare center's services. The site highlights facilities, enrollment processes, and testimonials, providing parents with an intuitive digital experience while maintaining brand trust.",
-    image: "/api/placeholder/400/250",
-    link: "https://github.com/yourusername/daycare-website",
+    image: daycareImg,
+    link: "https://github.com/abhishekchukka/daycare",
     color: "#ff69b4",
     icon: "👶",
   },
@@ -363,7 +375,7 @@ function ProjectCard({ project, isVisible }) {
                       className="text-2xl sm:text-3xl opacity-60 animate-pulse"
                       style={{ color: project.color }}
                     >
-                      {project.icon}
+                      <img src={project.image} alt="" />
                     </div>
                   </div>
                   {/* Scanning Lines Effect */}
@@ -507,7 +519,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="min-h-screen relative bg-black text-white overflow-hidden"
+      className="min-h-screen md:min-h-[140vh] lg:min-h-screen relative bg-black text-white overflow-hidden pb-16 md:pb-24"
     >
       {/* Title - Responsive */}
       <div className="absolute top-8 sm:top-12 lg:top-16 left-1/2 transform -translate-x-1/2 z-20 px-4">
@@ -531,19 +543,18 @@ export default function Projects() {
       </div>
 
       {/* Layout Container - Responsive */}
-      <div className="flex flex-col lg:flex-row h-screen pt-16 lg:pt-24">
-        {/* 3D Canvas - Hidden on mobile, visible on desktop */}
-        {!responsive.isMobile && (
-          <div className="flex-1 relative h-64 sm:h-80 lg:h-full">
-            <Canvas
-              camera={{
-                position: [0, 0, responsive.cameraDistance],
-                fov: responsive.cameraFov,
-              }}
-              style={{ height: "100%", background: "black" }}
-            >
-              {/* Very simple lighting */}
-              <ambientLight intensity={1} />
+      <div className="flex flex-col lg:flex-row min-h-screen md:min-h-[120vh] lg:min-h-screen pt-16 lg:pt-24">
+        {/* 3D Canvas - Small preview on mobile, full on desktop */}
+        <div className={`${responsive.isMobile ? "h-32 sm:h-40" : "flex-1"} relative ${responsive.isMobile ? "mx-4 mb-4" : "h-64 sm:h-80 lg:h-full"}`}>
+          <Canvas
+            camera={{
+              position: [0, 0, responsive.cameraDistance],
+              fov: responsive.cameraFov,
+            }}
+            style={{ height: "100%", background: "black" }}
+          >
+            {/* Very simple lighting */}
+            <ambientLight intensity={1} />
 
               {/* Enhanced starfield with many more stars - Responsive density */}
               <Points
@@ -750,7 +761,6 @@ export default function Projects() {
               />
             </Canvas>
           </div>
-        )}
 
         {/* Enhanced Project Card - Full width on mobile, side panel on desktop */}
         <div
@@ -760,7 +770,7 @@ export default function Projects() {
             responsive.isMobile ? "" : "border-t lg:border-l lg:border-t-0"
           } border-gray-700/50`}
         >
-          <div className="h-full flex flex-col max-h-screen overflow-hidden">
+          <div className="h-full flex flex-col min-h-[75vh] md:min-h-[80vh] lg:max-h-screen overflow-hidden">
             {/* Header - Responsive */}
             <div className="mb-3 sm:mb-4">
               {/* Navigation title - Hidden on mobile */}
@@ -818,7 +828,7 @@ export default function Projects() {
             </div>
 
             {/* Enhanced Navigation Controls - Mobile Optimized */}
-            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 ">
               <div className="flex gap-2 sm:gap-3">
                 <button
                   onClick={handlePrev}
