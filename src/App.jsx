@@ -184,7 +184,7 @@ function Hero() {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [showSubtitles]);
+  }, [showSubtitles, subtitles.length]);
 
   return (
     <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-white pointer-events-none">
@@ -260,12 +260,15 @@ function Hero() {
         )}
       </div>
 
-      {/* Enhanced navigation buttons */}
-      <div ref={iconsRef} className="flex gap-6 mt-12 pointer-events-auto">
+      {/* Enhanced navigation buttons - Mobile optimized */}
+      <div
+        ref={iconsRef}
+        className="flex gap-3 sm:gap-6 mt-8 sm:mt-12 pointer-events-auto"
+      >
         {["Portfolio", "About", "Contact"].map((item) => (
           <button
             key={item}
-            className="group relative px-8 py-3 border-2 font-mono text-sm tracking-widest overflow-hidden transition-all duration-300 hover:scale-110"
+            className="group relative px-4 py-2 sm:px-8 sm:py-3 border-2 font-mono text-xs sm:text-sm tracking-wide sm:tracking-widest overflow-hidden transition-all duration-300 hover:scale-110"
             style={{
               borderColor: "#ffaa00",
               color: "#87ceeb",
@@ -323,20 +326,26 @@ function Hero() {
         ))}
       </div>
 
-      {/* Enhanced scroll indicator */}
-      <div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 animate-bounce"
+      {/* Enhanced scroll indicator - Now a functional button */}
+      <button
+        onClick={() => {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
+        }}
+        className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 animate-bounce pointer-events-auto hover:scale-110 transition-transform duration-300"
         style={{ color: "#87ceeb" }}
       >
         <span className="text-xs font-mono tracking-widest opacity-70">
           SCROLL DOWN
         </span>
         <div
-          className="w-6 h-10 border-2 rounded-full flex justify-center relative overflow-hidden"
+          className="w-5 h-8 sm:w-6 sm:h-10 border-2 rounded-full flex justify-center relative overflow-hidden"
           style={{ borderColor: "#ffaa00" }}
         >
           <div
-            className="w-1 h-3 rounded-full mt-2"
+            className="w-1 h-2 sm:h-3 rounded-full mt-1 sm:mt-2"
             style={{
               backgroundColor: "#ffaa00",
               animation: "scrollIndicator 2s ease-in-out infinite",
@@ -370,7 +379,7 @@ function Hero() {
             }}
           />
         </div>
-      </div>
+      </button>
     </div>
   );
 }

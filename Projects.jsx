@@ -520,7 +520,7 @@ export default function Projects() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          SOLAR_SYSTEM.PROJECTS
+          .PROJECTS
         </h2>
         <p className="text-sm sm:text-base lg:text-lg text-gray-300 text-center max-w-2xl font-mono">
           Navigate through my digital universe
@@ -529,219 +529,234 @@ export default function Projects() {
 
       {/* Layout Container - Responsive */}
       <div className="flex flex-col lg:flex-row h-screen pt-16 lg:pt-24">
-        {/* 3D Canvas - Responsive */}
-        <div className="flex-1 relative h-64 sm:h-80 lg:h-full">
-          <Canvas
-            camera={{
-              position: [0, 0, responsive.cameraDistance],
-              fov: responsive.cameraFov,
-            }}
-            style={{ height: "100%", background: "black" }}
-          >
-            {/* Very simple lighting */}
-            <ambientLight intensity={1} />
-
-            {/* Enhanced starfield with many more stars - Responsive density */}
-            <Points
-              positions={(() => {
-                const positions = new Float32Array(responsive.starCount * 3);
-                for (let i = 0; i < positions.length; i += 3) {
-                  positions[i] = (Math.random() - 0.5) * 200; // x
-                  positions[i + 1] = (Math.random() - 0.5) * 200; // y
-                  positions[i + 2] = (Math.random() - 0.5) * 200; // z
-                }
-                return positions;
-              })()}
-              stride={3}
-              frustumCulled={false}
+        {/* 3D Canvas - Hidden on mobile, visible on desktop */}
+        {!responsive.isMobile && (
+          <div className="flex-1 relative h-64 sm:h-80 lg:h-full">
+            <Canvas
+              camera={{
+                position: [0, 0, responsive.cameraDistance],
+                fov: responsive.cameraFov,
+              }}
+              style={{ height: "100%", background: "black" }}
             >
-              <PointMaterial
-                transparent
-                color="#ffffff"
-                size={responsive.starSize}
-                sizeAttenuation={false}
-                depthWrite={false}
-                opacity={0.8}
-              />
-            </Points>
+              {/* Very simple lighting */}
+              <ambientLight intensity={1} />
 
-            {/* Additional scattered bright stars - Fewer on mobile */}
-            {Array.from({ length: responsive.brightStars }, (_, i) => {
-              const x = (Math.random() - 0.5) * 150;
-              const y = (Math.random() - 0.5) * 150;
-              const z = (Math.random() - 0.5) * 150;
-              const size = Math.random() * 0.2 + 0.1;
-              return (
-                <mesh key={`star-${i}`} position={[x, y, z]}>
-                  <sphereGeometry args={[size, 6, 6]} />
+              {/* Enhanced starfield with many more stars - Responsive density */}
+              <Points
+                positions={(() => {
+                  const positions = new Float32Array(responsive.starCount * 3);
+                  for (let i = 0; i < positions.length; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * 200; // x
+                    positions[i + 1] = (Math.random() - 0.5) * 200; // y
+                    positions[i + 2] = (Math.random() - 0.5) * 200; // z
+                  }
+                  return positions;
+                })()}
+                stride={3}
+                frustumCulled={false}
+              >
+                <PointMaterial
+                  transparent
+                  color="#ffffff"
+                  size={responsive.starSize}
+                  sizeAttenuation={false}
+                  depthWrite={false}
+                  opacity={0.8}
+                />
+              </Points>
+
+              {/* Additional scattered bright stars - Fewer on mobile */}
+              {Array.from({ length: responsive.brightStars }, (_, i) => {
+                const x = (Math.random() - 0.5) * 150;
+                const y = (Math.random() - 0.5) * 150;
+                const z = (Math.random() - 0.5) * 150;
+                const size = Math.random() * 0.2 + 0.1;
+                return (
+                  <mesh key={`star-${i}`} position={[x, y, z]}>
+                    <sphereGeometry args={[size, 6, 6]} />
+                    <meshBasicMaterial
+                      color="#ffffff"
+                      opacity={Math.random() * 0.5 + 0.5}
+                      transparent
+                    />
+                  </mesh>
+                );
+              })}
+
+              {/* Enhanced Central Sun - Responsive size */}
+              <group>
+                {/* Sun core - Smaller on mobile */}
+                <mesh position={[0, 0, 0]}>
+                  <sphereGeometry args={[responsive.sunSize, 32, 32]} />
                   <meshBasicMaterial
-                    color="#ffffff"
-                    opacity={Math.random() * 0.5 + 0.5}
+                    color="#ffaa00"
                     transparent
+                    opacity={0.9}
                   />
                 </mesh>
-              );
-            })}
 
-            {/* Enhanced Central Sun - Responsive size */}
-            <group>
-              {/* Sun core - Smaller on mobile */}
-              <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[responsive.sunSize, 32, 32]} />
-                <meshBasicMaterial color="#ffaa00" transparent opacity={0.9} />
-              </mesh>
+                {/* Sun corona layers - Responsive */}
+                <mesh position={[0, 0, 0]}>
+                  <sphereGeometry args={[responsive.sunCorona1, 16, 16]} />
+                  <meshBasicMaterial
+                    color="#ff8800"
+                    transparent
+                    opacity={0.3}
+                    side={THREE.BackSide}
+                  />
+                </mesh>
 
-              {/* Sun corona layers - Responsive */}
-              <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[responsive.sunCorona1, 16, 16]} />
-                <meshBasicMaterial
-                  color="#ff8800"
-                  transparent
-                  opacity={0.3}
-                  side={THREE.BackSide}
-                />
-              </mesh>
+                <mesh position={[0, 0, 0]}>
+                  <sphereGeometry args={[responsive.sunCorona2, 16, 16]} />
+                  <meshBasicMaterial
+                    color="#ffcc44"
+                    transparent
+                    opacity={0.1}
+                    side={THREE.BackSide}
+                  />
+                </mesh>
+              </group>
 
-              <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[responsive.sunCorona2, 16, 16]} />
-                <meshBasicMaterial
-                  color="#ffcc44"
-                  transparent
-                  opacity={0.1}
-                  side={THREE.BackSide}
-                />
-              </mesh>
-            </group>
+              {/* Responsive Solar System Planets */}
+              {projects.map((project, i) => {
+                const angle = (i / projects.length) * Math.PI * 2;
+                // Responsive orbital spacing
+                const mobileRadius = 2.5 + (i % 3) * 1.5;
+                const desktopRadius = 4 + (i % 3) * 2.5;
+                const radius = responsive.isMobile
+                  ? mobileRadius
+                  : desktopRadius;
 
-            {/* Responsive Solar System Planets */}
-            {projects.map((project, i) => {
-              const angle = (i / projects.length) * Math.PI * 2;
-              // Responsive orbital spacing
-              const mobileRadius = 2.5 + (i % 3) * 1.5;
-              const desktopRadius = 4 + (i % 3) * 2.5;
-              const radius = responsive.isMobile ? mobileRadius : desktopRadius;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const isSelected = i === carouselIndex;
 
-              const x = Math.cos(angle) * radius;
-              const z = Math.sin(angle) * radius;
-              const isSelected = i === carouselIndex;
+                // Responsive planet sizes
+                const baseSizes = [
+                  0.4, 0.35, 0.45, 0.3, 0.5, 0.55, 0.4, 0.35, 0.4, 0.35,
+                ];
+                const actualBaseSize = baseSizes[i] * responsive.planetScale;
+                const planetSize = isSelected
+                  ? actualBaseSize + 0.15
+                  : actualBaseSize;
 
-              // Responsive planet sizes
-              const baseSizes = [
-                0.4, 0.35, 0.45, 0.3, 0.5, 0.55, 0.4, 0.35, 0.4, 0.35,
-              ];
-              const actualBaseSize = baseSizes[i] * responsive.planetScale;
-              const planetSize = isSelected
-                ? actualBaseSize + 0.15
-                : actualBaseSize;
-
-              return (
-                <group key={i}>
-                  {/* Main Planet */}
-                  <mesh
-                    position={[x, 0, z]}
-                    onClick={() => setCarouselIndex(i)}
-                  >
-                    <sphereGeometry args={[planetSize, 32, 32]} />
-                    <meshBasicMaterial
-                      color={project.color}
-                      transparent
-                      opacity={0.9}
-                    />
-                  </mesh>
-
-                  {/* Selection indicators - Responsive */}
-                  {isSelected && (
-                    <mesh position={[x, planetSize + 0.3, z]}>
-                      <sphereGeometry args={[0.06, 8, 8]} />
-                      <meshBasicMaterial
-                        color="#ffffff"
-                        transparent
-                        opacity={1}
-                      />
-                    </mesh>
-                  )}
-
-                  {/* Selection ring - Responsive */}
-                  {isSelected && (
-                    <mesh position={[x, 0, z]} rotation={[Math.PI / 2, 0, 0]}>
-                      <ringGeometry
-                        args={[planetSize + 0.08, planetSize + 0.12, 32]}
-                      />
-                      <meshBasicMaterial
-                        color="#ffffff"
-                        transparent
-                        opacity={0.8}
-                        side={THREE.DoubleSide}
-                      />
-                    </mesh>
-                  )}
-
-                  {/* Planet atmosphere when selected */}
-                  {isSelected && (
-                    <mesh position={[x, 0, z]}>
-                      <sphereGeometry args={[planetSize + 0.08, 16, 16]} />
-                      <meshBasicMaterial
-                        color={project.color}
-                        transparent
-                        opacity={0.2}
-                        side={THREE.BackSide}
-                      />
-                    </mesh>
-                  )}
-
-                  {/* Planet rings - Only on larger screens */}
-                  {(i + 1) % 3 === 0 && !responsive.isMobile && (
+                return (
+                  <group key={i}>
+                    {/* Main Planet */}
                     <mesh
                       position={[x, 0, z]}
-                      rotation={[Math.PI / 6, 0, Math.PI / 8]}
+                      onClick={() => setCarouselIndex(i)}
                     >
-                      <ringGeometry
-                        args={[planetSize + 0.15, planetSize + 0.35, 32]}
-                      />
+                      <sphereGeometry args={[planetSize, 32, 32]} />
                       <meshBasicMaterial
                         color={project.color}
                         transparent
-                        opacity={isSelected ? 0.6 : 0.4}
+                        opacity={0.9}
+                      />
+                    </mesh>
+
+                    {/* Selection indicators - Responsive */}
+                    {isSelected && (
+                      <mesh position={[x, planetSize + 0.3, z]}>
+                        <sphereGeometry args={[0.06, 8, 8]} />
+                        <meshBasicMaterial
+                          color="#ffffff"
+                          transparent
+                          opacity={1}
+                        />
+                      </mesh>
+                    )}
+
+                    {/* Selection ring - Responsive */}
+                    {isSelected && (
+                      <mesh position={[x, 0, z]} rotation={[Math.PI / 2, 0, 0]}>
+                        <ringGeometry
+                          args={[planetSize + 0.08, planetSize + 0.12, 32]}
+                        />
+                        <meshBasicMaterial
+                          color="#ffffff"
+                          transparent
+                          opacity={0.8}
+                          side={THREE.DoubleSide}
+                        />
+                      </mesh>
+                    )}
+
+                    {/* Planet atmosphere when selected */}
+                    {isSelected && (
+                      <mesh position={[x, 0, z]}>
+                        <sphereGeometry args={[planetSize + 0.08, 16, 16]} />
+                        <meshBasicMaterial
+                          color={project.color}
+                          transparent
+                          opacity={0.2}
+                          side={THREE.BackSide}
+                        />
+                      </mesh>
+                    )}
+
+                    {/* Planet rings - Only on larger screens */}
+                    {(i + 1) % 3 === 0 && !responsive.isMobile && (
+                      <mesh
+                        position={[x, 0, z]}
+                        rotation={[Math.PI / 6, 0, Math.PI / 8]}
+                      >
+                        <ringGeometry
+                          args={[planetSize + 0.15, planetSize + 0.35, 32]}
+                        />
+                        <meshBasicMaterial
+                          color={project.color}
+                          transparent
+                          opacity={isSelected ? 0.6 : 0.4}
+                          side={THREE.DoubleSide}
+                        />
+                      </mesh>
+                    )}
+
+                    {/* Moons - Only on larger screens */}
+                    {baseSizes[i] > 0.4 && !responsive.isMobile && (
+                      <mesh position={[x + planetSize + 0.4, 0, z]}>
+                        <sphereGeometry args={[0.08, 8, 8]} />
+                        <meshBasicMaterial color="#cccccc" />
+                      </mesh>
+                    )}
+
+                    {/* Orbital path indicator */}
+                    <mesh rotation={[Math.PI / 2, 0, 0]}>
+                      <ringGeometry args={[radius - 0.01, radius + 0.01, 64]} />
+                      <meshBasicMaterial
+                        color={project.color}
+                        transparent
+                        opacity={isSelected ? 0.4 : 0.15}
                         side={THREE.DoubleSide}
                       />
                     </mesh>
-                  )}
+                  </group>
+                );
+              })}
 
-                  {/* Moons - Only on larger screens */}
-                  {baseSizes[i] > 0.4 && !responsive.isMobile && (
-                    <mesh position={[x + planetSize + 0.4, 0, z]}>
-                      <sphereGeometry args={[0.08, 8, 8]} />
-                      <meshBasicMaterial color="#cccccc" />
-                    </mesh>
-                  )}
+              <OrbitControls
+                enableZoom={true}
+                enableRotate={true}
+                autoRotate={true}
+                autoRotateSpeed={responsive.autoRotateSpeed}
+                enablePan={responsive.enablePan}
+                minDistance={responsive.minDistance}
+                maxDistance={responsive.maxDistance}
+              />
+            </Canvas>
+          </div>
+        )}
 
-                  {/* Orbital path indicator */}
-                  <mesh rotation={[Math.PI / 2, 0, 0]}>
-                    <ringGeometry args={[radius - 0.01, radius + 0.01, 64]} />
-                    <meshBasicMaterial
-                      color={project.color}
-                      transparent
-                      opacity={isSelected ? 0.4 : 0.15}
-                      side={THREE.DoubleSide}
-                    />
-                  </mesh>
-                </group>
-              );
-            })}
-
-            <OrbitControls
-              enableZoom={true}
-              enableRotate={true}
-              autoRotate={true}
-              autoRotateSpeed={responsive.autoRotateSpeed}
-              enablePan={responsive.enablePan}
-              minDistance={responsive.minDistance}
-              maxDistance={responsive.maxDistance}
-            />
-          </Canvas>
-        </div>{" "}
-        {/* Enhanced Project Card - Responsive Right Side */}
-        <div className="w-full lg:w-96 p-3 sm:p-4 bg-gradient-to-b from-gray-900/50 via-black/80 to-gray-900/50 backdrop-blur-xl border-t lg:border-l lg:border-t-0 border-gray-700/50">
+        {/* Enhanced Project Card - Full width on mobile, side panel on desktop */}
+        <div
+          className={`${
+            responsive.isMobile ? "w-full" : "w-full lg:w-96"
+          } p-3 sm:p-4 bg-gradient-to-b from-gray-900/50 via-black/80 to-gray-900/50 backdrop-blur-xl ${
+            responsive.isMobile ? "" : "border-t lg:border-l lg:border-t-0"
+          } border-gray-700/50`}
+        >
           <div className="h-full flex flex-col max-h-screen overflow-hidden">
             {/* Header - Responsive */}
             <div className="mb-3 sm:mb-4">

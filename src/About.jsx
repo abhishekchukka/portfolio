@@ -3,7 +3,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import * as THREE from "three";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -333,7 +332,19 @@ function ExperienceCard({ experience, isActive }) {
 // Vertical Timeline Component
 function VerticalTimeline() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const timelineRef = useRef();
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const experiences = [
     {
@@ -387,57 +398,125 @@ function VerticalTimeline() {
   ];
 
   return (
-    <div ref={timelineRef} className="grid grid-cols-12 gap-12 py-8">
-      {/* Left Side - Vertical Timeline */}
-      <div className="col-span-4">
-        <div className="sticky top-32">
-          <div className="relative">
-            {/* Main Timeline Line */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#ffaa00] via-[#87ceeb] to-[#ff6b35] opacity-30"></div>
+    <div
+      ref={timelineRef}
+      className={`py-6 lg:py-8 ${
+        isMobile ? "space-y-6" : "grid grid-cols-12 gap-12"
+      }`}
+    >
+      {isMobile ? (
+        // Mobile Layout - Simplified stacked cards
+        <div className="space-y-4">
+          {experiences.map((exp, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg border transition-all duration-300 ${
+                activeIndex === index
+                  ? "border-[#ffaa00] bg-[#ffaa00]/5"
+                  : "border-gray-700 bg-gray-900/50"
+              }`}
+              onClick={() => setActiveIndex(index)}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    exp.type === "internship"
+                      ? "bg-[#ffaa00]"
+                      : exp.type === "freelance"
+                      ? "bg-[#87ceeb]"
+                      : "bg-[#ff6b35]"
+                  }`}
+                />
+                <div>
+                  <h4 className="text-white font-semibold text-sm">
+                    {exp.role}
+                  </h4>
+                  <p className="text-gray-400 text-xs">
+                    {exp.company} • {exp.period}
+                  </p>
+                </div>
+              </div>
 
-            {/* Timeline Nodes */}
-            <div className="space-y-0">
+              {activeIndex === index && (
+                <div className="mt-3 pt-3 border-t border-gray-700">
+                  <p className="text-gray-300 text-sm mb-3">
+                    {exp.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {exp.skills.slice(0, 4).map((skill, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                    {exp.skills.length > 4 && (
+                      <span className="text-gray-400 text-xs">
+                        +{exp.skills.length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Desktop Layout - Original timeline design
+        <>
+          {/* Left Side - Vertical Timeline */}
+          <div className="col-span-4">
+            <div className="sticky top-32">
+              <div className="relative">
+                {/* Main Timeline Line */}
+                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#ffaa00] via-[#87ceeb] to-[#ff6b35] opacity-30"></div>
+
+                {/* Timeline Nodes */}
+                <div className="space-y-0">
+                  {experiences.map((exp, index) => (
+                    <TimelineNode
+                      key={index}
+                      experience={exp}
+                      index={index}
+                      isActive={activeIndex === index}
+                      onClick={setActiveIndex}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Experience Details */}
+          <div className="col-span-8">
+            <div className="min-h-96">
               {experiences.map((exp, index) => (
-                <TimelineNode
+                <ExperienceCard
                   key={index}
                   experience={exp}
-                  index={index}
                   isActive={activeIndex === index}
-                  onClick={setActiveIndex}
+                />
+              ))}
+            </div>
+
+            {/* Navigation Indicators */}
+            <div className="flex justify-center mt-8 gap-3">
+              {experiences.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    activeIndex === index
+                      ? "bg-[#ffaa00] scale-125 shadow-lg shadow-[#ffaa00]/50"
+                      : "bg-gray-600 hover:bg-gray-500 hover:scale-110"
+                  }`}
                 />
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Right Side - Experience Details */}
-      <div className="col-span-8">
-        <div className="min-h-96">
-          {experiences.map((exp, index) => (
-            <ExperienceCard
-              key={index}
-              experience={exp}
-              isActive={activeIndex === index}
-            />
-          ))}
-        </div>
-
-        {/* Navigation Indicators */}
-        <div className="flex justify-center mt-8 gap-3">
-          {experiences.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                activeIndex === index
-                  ? "bg-[#ffaa00] scale-125 shadow-lg shadow-[#ffaa00]/50"
-                  : "bg-gray-600 hover:bg-gray-500 hover:scale-110"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
@@ -446,6 +525,18 @@ function About() {
   const sectionRef = useRef();
   const titleRef = useRef();
   const lineRef = useRef();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // Changed to 1024 for laptop/desktop distinction
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const techStack = [
     "React",
@@ -507,38 +598,45 @@ function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative min-h-screen bg-black text-white py-20 overflow-hidden"
+      className="relative min-h-screen bg-black text-white py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
-      {/* Background Canvas with Hologram */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        <Canvas
-          camera={{ position: [0, 0, 1], fov: 75 }}
-          style={{ background: "transparent" }}
-        >
-          <EarthHologram />
-          <ambientLight intensity={0.3} />
-          <directionalLight position={[0, 30, 5]} intensity={1} />
-          <pointLight position={[10, 10, 10]} intensity={0.5} />
-        </Canvas>
-      </div>
+      {/* Background Canvas with Hologram - Only for laptop/desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-0 opacity-20">
+          <Canvas
+            camera={{ position: [0, 0, 1], fov: 75 }}
+            style={{ background: "transparent" }}
+          >
+            <EarthHologram />
+            <ambientLight intensity={0.3} />
+            <directionalLight position={[0, 30, 5]} intensity={1} />
+            <pointLight position={[10, 10, 10]} intensity={0.5} />
+          </Canvas>
+        </div>
+      )}
 
-      {/* Background texture overlay */}
+      {/* Simple gradient background for mobile */}
+      {isMobile && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/30 via-black/50 to-gray-800/30"></div>
+      )}
+
+      {/* Background texture overlay - Different intensity for mobile vs desktop */}
       <div className="absolute inset-0 opacity-5">
         <div
           className="w-full h-full"
           style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,170,0,0.3) 1px, transparent 0)`,
-            backgroundSize: "40px 40px",
+            backgroundSize: isMobile ? "20px 20px" : "40px 40px",
           }}
         ></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-8">
-        {/* Header Section */}
-        <div className="text-center mb-20">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section - Responsive */}
+        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
           <h2
             ref={titleRef}
-            className="text-7xl font-bold mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6"
             style={{
               background: "linear-gradient(135deg, #ffaa00, #87ceeb, #ff6b35)",
               WebkitBackgroundClip: "text",
@@ -549,30 +647,30 @@ function About() {
           </h2>
           <div
             ref={lineRef}
-            className="w-32 h-1 bg-gradient-to-r from-[#ffaa00] to-[#87ceeb] mx-auto mb-6 origin-left"
+            className="w-20 sm:w-24 lg:w-32 h-1 bg-gradient-to-r from-[#ffaa00] to-[#87ceeb] mx-auto mb-4 sm:mb-6 origin-left"
           ></div>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
             Final-year Computer Science student passionate about crafting
             digital experiences and exploring the frontiers of technology
           </p>
         </div>
 
-        {/* Main Content Layout */}
-        <div className="space-y-16">
-          {/* Introduction Row */}
-          <div className="grid grid-cols-12 gap-8 items-center">
-            <Card className="col-span-7" delay={0.2} direction="left">
-              <div className="bg-gradient-to-br from-[#ffaa00]/10 via-transparent to-[#87ceeb]/10 backdrop-blur-sm border border-[#ffaa00]/20 rounded-2xl p-8 hover:border-[#ffaa00]/40 transition-colors duration-500">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-3 h-3 bg-[#ffaa00] rounded-full animate-pulse"></div>
-                  <span className="text-[#ffaa00] font-semibold text-lg">
+        {/* Main Content Layout - Responsive */}
+        <div className="space-y-8 sm:space-y-12 lg:space-y-16">
+          {/* Introduction Row - Responsive grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+            <Card className="lg:col-span-7" delay={0.2} direction="left">
+              <div className="bg-gradient-to-br from-[#ffaa00]/10 via-transparent to-[#87ceeb]/10 backdrop-blur-sm border border-[#ffaa00]/20 rounded-xl lg:rounded-2xl p-6 lg:p-8 hover:border-[#ffaa00]/40 transition-colors duration-500">
+                <div className="flex items-center gap-3 lg:gap-4 mb-4 lg:mb-6">
+                  <div className="w-2 h-2 lg:w-3 lg:h-3 bg-[#ffaa00] rounded-full animate-pulse"></div>
+                  <span className="text-[#ffaa00] font-semibold text-base lg:text-lg">
                     Currently
                   </span>
                 </div>
-                <h3 className="text-3xl font-bold mb-4 text-white">
+                <h3 className="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4 text-white">
                   Hey there! I'm a CS student who codes with purpose.
                 </h3>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="text-gray-300 leading-relaxed mb-3 lg:mb-4 text-sm lg:text-base">
                   I'm in my final year of{" "}
                   <span className="text-[#ffaa00] font-medium">
                     B.Tech Computer Science
@@ -588,13 +686,13 @@ function About() {
               </div>
             </Card>
 
-            <Card className="col-span-5" delay={0.4} direction="right">
-              <div className="bg-gradient-to-tl from-[#87ceeb]/15 to-transparent backdrop-blur-sm border border-[#87ceeb]/25 rounded-2xl p-6 h-full hover:border-[#87ceeb]/50 transition-colors duration-500">
+            <Card className="lg:col-span-5" delay={0.4} direction="right">
+              <div className="bg-gradient-to-tl from-[#87ceeb]/15 to-transparent backdrop-blur-sm border border-[#87ceeb]/25 rounded-xl lg:rounded-2xl p-4 lg:p-6 h-full hover:border-[#87ceeb]/50 transition-colors duration-500">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-[#87ceeb] mb-2">
+                  <div className="text-4xl lg:text-5xl font-bold text-[#87ceeb] mb-1 lg:mb-2">
                     2024
                   </div>
-                  <div className="text-lg text-white font-semibold mb-3">
+                  <div className="text-base lg:text-lg text-white font-semibold mb-2 lg:mb-3">
                     Final Year
                   </div>
                   <div className="space-y-2">
@@ -613,19 +711,21 @@ function About() {
             </Card>
           </div>
 
-          {/* Experience Timeline Section */}
-          <div className="space-y-8">
+          {/* Experience Timeline Section - Mobile optimized */}
+          <div className="space-y-6 lg:space-y-8">
             <Card delay={0.6}>
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-8 h-0.5 bg-[#ffaa00]"></div>
-                  <h3 className="text-3xl font-bold text-[#ffaa00]">
+              <div className="text-center mb-6 lg:mb-8">
+                <div className="flex items-center justify-center gap-2 lg:gap-3 mb-3 lg:mb-4">
+                  <div className="w-6 lg:w-8 h-0.5 bg-[#ffaa00]"></div>
+                  <h3 className="text-2xl lg:text-3xl font-bold text-[#ffaa00]">
                     My Journey
                   </h3>
-                  <div className="w-8 h-0.5 bg-[#ffaa00]"></div>
+                  <div className="w-6 lg:w-8 h-0.5 bg-[#ffaa00]"></div>
                 </div>
-                <p className="text-gray-400 text-lg">
-                  Click on any timeline node to explore my experience
+                <p className="text-gray-400 text-base lg:text-lg px-4">
+                  {isMobile
+                    ? "Tap on any card to learn more"
+                    : "Click on any timeline node to explore my experience"}
                 </p>
               </div>
             </Card>
@@ -635,11 +735,11 @@ function About() {
             </Card>
           </div>
 
-          {/* Skills & Focus */}
-          <div className="grid grid-cols-12 gap-8">
-            <Card className="col-span-5" delay={1.4} direction="left">
-              <div className="bg-gradient-to-br from-[#87ceeb]/10 to-[#ffaa00]/5 backdrop-blur-sm border border-[#87ceeb]/20 rounded-2xl p-8 hover:border-[#87ceeb]/40 transition-colors duration-500">
-                <h3 className="text-2xl font-bold text-[#87ceeb] mb-6">
+          {/* Skills & Focus - Responsive grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <Card className="lg:col-span-5" delay={1.4} direction="left">
+              <div className="bg-gradient-to-br from-[#87ceeb]/10 to-[#ffaa00]/5 backdrop-blur-sm border border-[#87ceeb]/20 rounded-xl lg:rounded-2xl p-6 lg:p-8 hover:border-[#87ceeb]/40 transition-colors duration-500">
+                <h3 className="text-xl lg:text-2xl font-bold text-[#87ceeb] mb-4 lg:mb-6">
                   What I'm Exploring
                 </h3>
                 <div className="space-y-4">
@@ -662,7 +762,7 @@ function About() {
                     </span>
                   </div>
                 </div>
-                <div className="mt-6 pt-6 border-t border-gray-700">
+                <div className="mt-4 lg:mt-6 pt-4 lg:pt-6 border-t border-gray-700">
                   <p className="text-gray-300 text-sm">
                     Always learning, always building. The intersection of
                     creativity and logic is where I find the most interesting
@@ -672,17 +772,17 @@ function About() {
               </div>
             </Card>
 
-            <Card className="col-span-7" delay={1.6} direction="right">
-              <div className="bg-gradient-to-br from-[#ffaa00]/10 to-[#87ceeb]/5 backdrop-blur-sm border border-[#ffaa00]/20 rounded-2xl p-8 hover:border-[#ffaa00]/40 transition-colors duration-500">
-                <h3 className="text-2xl font-bold text-[#ffaa00] mb-6">
+            <Card className="lg:col-span-7" delay={1.6} direction="right">
+              <div className="bg-gradient-to-br from-[#ffaa00]/10 to-[#87ceeb]/5 backdrop-blur-sm border border-[#ffaa00]/20 rounded-xl lg:rounded-2xl p-6 lg:p-8 hover:border-[#ffaa00]/40 transition-colors duration-500">
+                <h3 className="text-xl lg:text-2xl font-bold text-[#ffaa00] mb-4 lg:mb-6">
                   Technologies I Work With
                 </h3>
-                <div className="flex flex-wrap gap-3 mb-6">
+                <div className="flex flex-wrap gap-2 lg:gap-3 mb-4 lg:mb-6">
                   {techStack.map((tech, index) => (
                     <TechBadge key={tech} tech={tech} index={index} />
                   ))}
                 </div>
-                <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-700">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 pt-4 lg:pt-6 border-t border-gray-700">
                   <div>
                     <div className="text-sm text-gray-400 mb-1">Frontend</div>
                     <div className="text-white font-medium text-sm">
@@ -706,23 +806,23 @@ function About() {
             </Card>
           </div>
 
-          {/* Call to Action */}
+          {/* Call to Action - Mobile optimized */}
           <Card delay={1.8}>
-            <div className="text-center py-12">
-              <div className="max-w-2xl mx-auto">
-                <h3 className="text-3xl font-bold text-white mb-4">
+            <div className="text-center py-8 lg:py-12">
+              <div className="max-w-2xl mx-auto px-4">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3 lg:mb-4">
                   Ready to build something together?
                 </h3>
-                <p className="text-gray-300 mb-8">
+                <p className="text-gray-300 mb-6 lg:mb-8 text-sm lg:text-base">
                   I'm actively looking for opportunities where I can contribute,
                   learn, and grow. Let's connect and create something
                   meaningful.
                 </p>
-                <div className="flex justify-center gap-6">
-                  <button className="px-8 py-3 bg-gradient-to-r from-[#ffaa00] to-[#ff8800] text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-[#ffaa00]/30 transition-all duration-300 hover:scale-105">
+                <div className="flex flex-col sm:flex-row justify-center gap-4 lg:gap-6">
+                  <button className="px-6 lg:px-8 py-3 bg-gradient-to-r from-[#ffaa00] to-[#ff8800] text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-[#ffaa00]/30 transition-all duration-300 hover:scale-105">
                     Get In Touch
                   </button>
-                  <button className="px-8 py-3 border border-[#87ceeb] text-[#87ceeb] font-semibold rounded-lg hover:bg-[#87ceeb]/10 transition-all duration-300 hover:scale-105">
+                  <button className="px-6 lg:px-8 py-3 border border-[#87ceeb] text-[#87ceeb] font-semibold rounded-lg hover:bg-[#87ceeb]/10 transition-all duration-300 hover:scale-105">
                     View My Work
                   </button>
                 </div>
