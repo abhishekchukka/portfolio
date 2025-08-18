@@ -519,7 +519,9 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="min-h-screen md:min-h-[140vh] lg:min-h-screen relative bg-black text-white overflow-hidden pb-16 md:pb-24"
+      className={`${
+        responsive.isMobile ? "min-h-[120vh]" : "min-h-screen"
+      } relative bg-black text-white overflow-hidden`}
     >
       {/* Title - Responsive */}
       <div className="absolute top-8 sm:top-12 lg:top-16 left-1/2 transform -translate-x-1/2 z-20 px-4">
@@ -543,18 +545,23 @@ export default function Projects() {
       </div>
 
       {/* Layout Container - Responsive */}
-      <div className="flex flex-col lg:flex-row min-h-screen md:min-h-[120vh] lg:min-h-screen pt-16 lg:pt-24">
-        {/* 3D Canvas - Small preview on mobile, full on desktop */}
-        <div className={`${responsive.isMobile ? "h-32 sm:h-40" : "flex-1"} relative ${responsive.isMobile ? "mx-4 mb-4" : "h-64 sm:h-80 lg:h-full"}`}>
-          <Canvas
-            camera={{
-              position: [0, 0, responsive.cameraDistance],
-              fov: responsive.cameraFov,
-            }}
-            style={{ height: "100%", background: "black" }}
-          >
-            {/* Very simple lighting */}
-            <ambientLight intensity={1} />
+      <div
+        className={`flex flex-col lg:flex-row ${
+          responsive.isMobile ? "min-h-[120vh]" : "h-screen"
+        } pt-16 lg:pt-24`}
+      >
+        {/* 3D Canvas - Hidden on mobile, visible on desktop */}
+        {!responsive.isMobile && (
+          <div className="flex-1 relative h-64 sm:h-80 lg:h-full">
+            <Canvas
+              camera={{
+                position: [0, 0, responsive.cameraDistance],
+                fov: responsive.cameraFov,
+              }}
+              style={{ height: "100%", background: "black" }}
+            >
+              {/* Very simple lighting */}
+              <ambientLight intensity={1} />
 
               {/* Enhanced starfield with many more stars - Responsive density */}
               <Points
@@ -761,6 +768,7 @@ export default function Projects() {
               />
             </Canvas>
           </div>
+        )}
 
         {/* Enhanced Project Card - Full width on mobile, side panel on desktop */}
         <div
@@ -770,7 +778,7 @@ export default function Projects() {
             responsive.isMobile ? "" : "border-t lg:border-l lg:border-t-0"
           } border-gray-700/50`}
         >
-          <div className="h-full flex flex-col min-h-[75vh] md:min-h-[80vh] lg:max-h-screen overflow-hidden">
+          <div className="h-full flex flex-col max-h-screen overflow-hidden">
             {/* Header - Responsive */}
             <div className="mb-3 sm:mb-4">
               {/* Navigation title - Hidden on mobile */}
@@ -828,7 +836,7 @@ export default function Projects() {
             </div>
 
             {/* Enhanced Navigation Controls - Mobile Optimized */}
-            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 ">
+            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 xs:mb-5">
               <div className="flex gap-2 sm:gap-3">
                 <button
                   onClick={handlePrev}
@@ -877,6 +885,9 @@ export default function Projects() {
           </div>
         </div>
       </div>
+
+      {/* Mobile bottom spacing to prevent Contact overlap */}
+      {responsive.isMobile && <div className="h-20 sm:h-24"></div>}
 
       {/* Instructions - Desktop only */}
       {!responsive.isMobile && (

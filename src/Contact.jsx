@@ -161,12 +161,17 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="min-h-screen relative overflow-hidden bg-black pt-16 md:pt-24"
+      className={`min-h-screen relative overflow-hidden bg-black ${
+        isMobile ? "pt-20" : "pt-16 md:pt-24 lg:pt-0"
+      }`}
     >
-      {/* 3D Background - Only on desktop */}
+      {/* 3D Background - Desktop only */}
       {!isMobile && (
-        <div className="absolute inset-0 z-0">
-          <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
+        <div className="absolute inset-0 z-0 h-screen w-full">
+          <Canvas
+            camera={{ position: [0, 0, 10], fov: 75 }}
+            style={{ width: "100%", height: "100%" }}
+          >
             <ambientLight intensity={0.3} />
             <pointLight
               position={[10, 10, 10]}
@@ -185,13 +190,13 @@ const Contact = () => {
         </div>
       )}
 
-      {/* Starry background for mobile */}
+      {/* Additional starry background for mobile */}
       {isMobile && (
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-gray-900 via-blue-900 to-black">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,_#00f5ff_0%,_transparent_50%)] opacity-20"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,_#ff00f5_0%,_transparent_50%)] opacity-20"></div>
           {/* Stars */}
-          {Array.from({ length: 100 }).map((_, i) => (
+          {Array.from({ length: 50 }).map((_, i) => (
             <div
               key={i}
               className="absolute w-0.5 h-0.5 bg-white rounded-full animate-pulse"
@@ -207,7 +212,7 @@ const Contact = () => {
       )}
 
       {/* Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+      <div className="relative z-10 flex items-center justify-center min-h-screen lg:h-screen p-4 lg:p-8">
         <div className="w-full max-w-2xl">
           {/* Mobile Title */}
           {isMobile && (
