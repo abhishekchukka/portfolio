@@ -20,6 +20,17 @@ function Card({ children, className = "", delay = 0, direction = "up" }) {
 
   useEffect(() => {
     if (cardRef.current) {
+      // Skip animations on mobile for better performance
+      if (isMobile) {
+        gsap.set(cardRef.current, {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+        });
+        return;
+      }
+
       // Reduced animations for mobile
       const startY = isMobile
         ? 30
@@ -52,10 +63,12 @@ function Card({ children, className = "", delay = 0, direction = "up" }) {
           duration: isMobile ? 0.6 : 1.2, // Shorter duration on mobile
           delay: delay,
           ease: isMobile ? "power1.out" : "power3.out", // Simpler easing on mobile
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 85%",
-          },
+          scrollTrigger: !isMobile
+            ? {
+                trigger: cardRef.current,
+                start: "top 85%",
+              }
+            : null,
         }
       );
     }
@@ -77,6 +90,17 @@ function TechBadge({ tech, index }) {
 
   useEffect(() => {
     if (badgeRef.current) {
+      // Skip animations on mobile for better performance
+      const isMobileDevice = window.innerWidth < 768;
+
+      if (isMobileDevice) {
+        gsap.set(badgeRef.current, {
+          opacity: 1,
+          scale: 1,
+        });
+        return;
+      }
+
       gsap.fromTo(
         badgeRef.current,
         {
@@ -335,6 +359,18 @@ function TimelineNode({ experience, index, isActive, onClick }) {
 
   useEffect(() => {
     if (nodeRef.current) {
+      // Skip animations on mobile for better performance
+      const isMobileDevice = window.innerWidth < 768;
+
+      if (isMobileDevice) {
+        gsap.set(nodeRef.current, {
+          scale: 1,
+          opacity: 1,
+          x: 0,
+        });
+        return;
+      }
+
       gsap.fromTo(
         nodeRef.current,
         {
@@ -439,6 +475,18 @@ function ExperienceCard({ experience, isActive }) {
   useEffect(() => {
     if (cardRef.current) {
       if (isActive) {
+        // Skip animations on mobile for better performance
+        const isMobileDevice = window.innerWidth < 768;
+
+        if (isMobileDevice) {
+          gsap.set(cardRef.current, {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+          });
+          return;
+        }
+
         gsap.fromTo(
           cardRef.current,
           {
@@ -717,6 +765,22 @@ function About() {
   ];
 
   useEffect(() => {
+    // Skip animations on mobile for better performance
+    const isMobileDevice = window.innerWidth < 768;
+
+    if (isMobileDevice) {
+      gsap.set(titleRef.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      });
+
+      gsap.set(lineRef.current, {
+        scaleX: 1,
+      });
+      return;
+    }
+
     // Title animation
     gsap.fromTo(
       titleRef.current,
