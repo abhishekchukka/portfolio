@@ -176,22 +176,22 @@ function MobileJourneyCards({ experiences }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 px-2">
       {/* Progress indicators */}
       <div className="flex justify-center gap-2 mb-6">
         {experiences.map((_, index) => (
           <button
             key={index}
             onClick={() => setActiveCard(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
               activeCard === index ? "bg-[#ffaa00] scale-150" : "bg-gray-600"
             }`}
           />
         ))}
       </div>
 
-      {/* Main card */}
-      <div className="relative h-80 overflow-hidden rounded-xl">
+      {/* Main card - Increased height and better spacing */}
+      <div className="relative h-96 sm:h-80 overflow-hidden rounded-xl">
         <div
           className="flex transition-transform duration-300 ease-out h-full"
           style={{ transform: `translateX(-${activeCard * 100}%)` }}
@@ -202,7 +202,7 @@ function MobileJourneyCards({ experiences }) {
           {experiences.map((exp, index) => (
             <div key={index} className="min-w-full h-full px-2">
               <div
-                className="h-full p-6 rounded-xl bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-700 relative overflow-hidden"
+                className="h-full p-4 sm:p-6 rounded-xl bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-700 relative overflow-hidden flex flex-col"
                 style={{
                   borderColor: `${getCardColor(exp.type)}40`,
                   boxShadow: `0 0 30px ${getCardColor(exp.type)}20`,
@@ -210,20 +210,20 @@ function MobileJourneyCards({ experiences }) {
               >
                 {/* Background accent */}
                 <div
-                  className="absolute top-0 right-0 w-20 h-20 rounded-full blur-xl opacity-20"
+                  className="absolute top-0 right-0 w-16 h-16 rounded-full blur-xl opacity-20"
                   style={{ backgroundColor: getCardColor(exp.type) }}
                 />
 
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                {/* Header - More compact */}
+                <div className="flex items-start justify-between mb-3 flex-shrink-0">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="w-4 h-4 rounded-full animate-pulse"
+                      className="w-3 h-3 rounded-full animate-pulse"
                       style={{ backgroundColor: getCardColor(exp.type) }}
                     />
                     <div>
                       <span
-                        className="text-sm font-medium px-2 py-1 rounded-full"
+                        className="text-xs font-medium px-2 py-1 rounded-full"
                         style={{
                           backgroundColor: `${getCardColor(exp.type)}20`,
                           color: getCardColor(exp.type),
@@ -233,51 +233,53 @@ function MobileJourneyCards({ experiences }) {
                       </span>
                     </div>
                   </div>
-                  <span className="text-gray-400 text-sm">
+                  <span className="text-gray-400 text-xs">
                     {index + 1}/{experiences.length}
                   </span>
                 </div>
 
-                {/* Content */}
-                <div className="space-y-4">
-                  <div>
+                {/* Content - Improved spacing and scrolling */}
+                <div className="flex-1 space-y-3 overflow-y-auto pr-2">
+                  <div className="flex-shrink-0">
                     <h3
-                      className="text-xl font-bold mb-1"
+                      className="text-lg sm:text-xl font-bold mb-1 leading-tight"
                       style={{ color: getCardColor(exp.type) }}
                     >
                       {exp.role}
                     </h3>
-                    <p className="text-gray-300 font-medium">{exp.company}</p>
+                    <p className="text-gray-300 font-medium text-sm">
+                      {exp.company}
+                    </p>
                   </div>
 
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                     {exp.description}
                   </p>
 
-                  {/* Skills tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {exp.skills.slice(0, 6).map((skill, skillIndex) => (
+                  {/* Skills tags - More compact */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {exp.skills.slice(0, 5).map((skill, skillIndex) => (
                       <span
                         key={skillIndex}
-                        className="px-3 py-1 bg-gray-800/80 text-gray-300 text-xs rounded-full border border-gray-700"
+                        className="px-2 py-1 bg-gray-800/80 text-gray-300 text-xs rounded-full border border-gray-700"
                       >
                         {skill}
                       </span>
                     ))}
-                    {exp.skills.length > 6 && (
-                      <span className="px-3 py-1 bg-gray-700/80 text-gray-400 text-xs rounded-full">
-                        +{exp.skills.length - 6}
+                    {exp.skills.length > 5 && (
+                      <span className="px-2 py-1 bg-gray-700/80 text-gray-400 text-xs rounded-full">
+                        +{exp.skills.length - 5}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Swipe hint for first card */}
+                {/* Swipe hint for first card - Better positioning */}
                 {index === 0 && activeCard === 0 && (
-                  <div className="absolute bottom-4 right-4 text-xs text-gray-500 flex items-center gap-1">
+                  <div className="absolute bottom-2 right-2 text-xs text-gray-500 flex items-center gap-1 bg-black/50 px-2 py-1 rounded">
                     <span>Swipe</span>
                     <svg
-                      className="w-4 h-4"
+                      className="w-3 h-3"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -297,19 +299,19 @@ function MobileJourneyCards({ experiences }) {
         </div>
       </div>
 
-      {/* Navigation arrows */}
-      <div className="flex justify-between mt-4">
+      {/* Navigation arrows - More compact */}
+      <div className="flex justify-between items-center mt-6 px-4">
         <button
           onClick={() => setActiveCard(Math.max(0, activeCard - 1))}
           disabled={activeCard === 0}
-          className={`p-3 rounded-full border transition-all duration-300 ${
+          className={`p-2 sm:p-3 rounded-full border transition-all duration-300 ${
             activeCard === 0
-              ? "border-gray-700 text-gray-600 cursor-not-allowed"
-              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10"
+              ? "border-gray-700 text-gray-600 cursor-not-allowed opacity-50"
+              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10 hover:scale-105"
           }`}
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 sm:w-5 sm:h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -323,19 +325,27 @@ function MobileJourneyCards({ experiences }) {
           </svg>
         </button>
 
+        {/* Center indicator with current experience title */}
+        <div className="flex-1 text-center px-4">
+          <div className="text-xs text-gray-400 mb-1">Current</div>
+          <div className="text-sm font-medium text-white truncate">
+            {experiences[activeCard].role}
+          </div>
+        </div>
+
         <button
           onClick={() =>
             setActiveCard(Math.min(experiences.length - 1, activeCard + 1))
           }
           disabled={activeCard === experiences.length - 1}
-          className={`p-3 rounded-full border transition-all duration-300 ${
+          className={`p-2 sm:p-3 rounded-full border transition-all duration-300 ${
             activeCard === experiences.length - 1
-              ? "border-gray-700 text-gray-600 cursor-not-allowed"
-              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10"
+              ? "border-gray-700 text-gray-600 cursor-not-allowed opacity-50"
+              : "border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00]/10 hover:scale-105"
           }`}
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 sm:w-5 sm:h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

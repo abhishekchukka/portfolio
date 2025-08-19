@@ -185,7 +185,7 @@ const projects = [
 ];
 
 // Enhanced Futuristic ProjectCard Component
-function ProjectCard({ project, isVisible }) {
+function ProjectCard({ project, isVisible, isMobile }) {
   const cardRef = useRef();
   const glitchRef = useRef();
 
@@ -230,7 +230,11 @@ function ProjectCard({ project, isVisible }) {
       {isVisible && (
         <div ref={cardRef} className="w-full h-full overflow-y-auto">
           {/* Main Futuristic Card - Mobile Responsive */}
-          <div className="relative bg-gradient-to-br from-gray-900/95 via-black/90 to-gray-800/95 backdrop-blur-2xl border border-gray-600/30 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
+          <div
+            className={`relative bg-gradient-to-br from-gray-900/95 via-black/90 to-gray-800/95 backdrop-blur-2xl border border-gray-600/30 rounded-xl sm:rounded-2xl shadow-2xl ${
+              isMobile ? "overflow-visible" : "overflow-hidden"
+            }`}
+          >
             {/* Animated Border Effect */}
             <div className="absolute inset-0 rounded-xl sm:rounded-2xl">
               <div
@@ -276,7 +280,11 @@ function ProjectCard({ project, isVisible }) {
             </div>
 
             {/* Main Content - Mobile Responsive */}
-            <div className="relative p-4 sm:p-6 space-y-4 sm:space-y-6">
+            <div
+              className={`relative space-y-4 sm:space-y-6 ${
+                isMobile ? "p-4 pb-8" : "p-4 sm:p-6"
+              }`}
+            >
               {/* Project Title with Icon - Mobile Layout */}
               <div className="flex items-start gap-3 sm:gap-4">
                 <div
@@ -778,7 +786,13 @@ export default function Projects() {
             responsive.isMobile ? "" : "border-t lg:border-l lg:border-t-0"
           } border-gray-700/50`}
         >
-          <div className="h-full flex flex-col max-h-screen overflow-hidden">
+          <div
+            className={`h-full flex flex-col ${
+              responsive.isMobile
+                ? "min-h-[80vh]"
+                : "max-h-screen overflow-hidden"
+            }`}
+          >
             {/* Header - Responsive */}
             <div className="mb-3 sm:mb-4">
               {/* Navigation title - Hidden on mobile */}
@@ -825,11 +839,20 @@ export default function Projects() {
             </div>
 
             {/* Project Card Container - Responsive */}
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full overflow-y-auto">
+            <div
+              className={`flex-1 ${
+                responsive.isMobile ? "overflow-visible" : "overflow-hidden"
+              }`}
+            >
+              <div
+                className={`h-full ${
+                  responsive.isMobile ? "overflow-visible" : "overflow-y-auto"
+                }`}
+              >
                 <ProjectCard
                   project={displayedProject}
                   isVisible={true}
+                  isMobile={responsive.isMobile}
                   key={displayedProject.id}
                 />
               </div>
