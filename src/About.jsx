@@ -1063,7 +1063,7 @@ function About() {
               <div className="bg-gradient-to-tl from-[#87ceeb]/15 to-transparent backdrop-blur-sm border border-[#87ceeb]/25 rounded-xl lg:rounded-2xl p-4 lg:p-6 h-full hover:border-[#87ceeb]/50 transition-colors duration-500">
                 <div className="text-center">
                   <div className="text-4xl lg:text-5xl font-bold text-[#87ceeb] mb-1 lg:mb-2">
-                    2024
+                    2026
                   </div>
                   <div className="text-base lg:text-lg text-white font-semibold mb-2 lg:mb-3">
                     Final Year
