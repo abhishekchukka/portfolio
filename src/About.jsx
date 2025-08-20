@@ -327,7 +327,7 @@ function MobileJourneyCards({ experiences }) {
 
         {/* Center indicator with current experience title */}
         <div className="flex-1 text-center px-4">
-          <div className="text-xs text-gray-400 mb-1">Current</div>
+          {/* <div className="text-xs text-gray-400 mb-1">Current</div> */}
           <div className="text-sm font-medium text-white truncate">
             {experiences[activeCard].role}
           </div>
