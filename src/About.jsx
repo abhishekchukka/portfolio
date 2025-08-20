@@ -631,13 +631,13 @@ function VerticalTimeline() {
       description:
         "Built interactive UI components and optimized website performance. Collaborated with the team to deliver seamless user experiences using modern React patterns and best practices. Focused on creating responsive designs that work across all device types.",
       skills: [
+        "Next.js",
         "React",
-        "JavaScript",
-        "CSS3",
+        "Microsoft sql server",
         "Performance Optimization",
         "Responsive Design",
       ],
-      achievements: "Improved page load speed by 40% through code optimization",
+      achievements: "Crafted responsive UI components with Next.js",
     },
     {
       role: "Full Stack Developer",
@@ -647,10 +647,9 @@ function VerticalTimeline() {
       description:
         "End-to-end development from design to deployment. Handled the complete project lifecycle independently, managing client requirements and technical implementation. Built a comprehensive management system with user authentication and data visualization.",
       skills: [
-        "React",
+        "Next.js",
         "Node.js",
-        "MongoDB",
-        "Express",
+        "FIREBASE ",
         "Client Management",
         "UI/UX Design",
       ],
@@ -659,7 +658,7 @@ function VerticalTimeline() {
     {
       role: "Creative Volunteer",
       company: "NGO BASS",
-      period: "2023-24",
+      period: "2023-present",
       type: "volunteer",
       description:
         "Created presentations and digital content for community awareness campaigns. Contributing to social impact initiatives through creative and technical skills. Developed engaging visual content that effectively communicated important social messages.",

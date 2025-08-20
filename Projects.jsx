@@ -15,7 +15,7 @@ import ecommerceImg from "./src/assets/projectimg/ecommerce.png";
 import aiItineraryImg from "./src/assets/projectimg/ai itenary planner.png";
 import aiNewsCrawlerImg from "./src/assets/projectimg/ai news crawler.png";
 import hotelComplaintImg from "./src/assets/projectimg/hotel complaint classification.png";
-import daycareImg from "./src/assets/projectimg/Screenshot 2025-08-18 204211.png";
+import daycareImg from "./src/assets/projectimg/Daycare.png";
 
 // Custom hook for responsive values
 function useResponsiveValues() {
