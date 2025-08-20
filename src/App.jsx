@@ -105,8 +105,9 @@ function Hero() {
 
   const subtitles = [
     "Full Stack Developer",
-    "Machine Learning Engineer",
-    "Creative Problem Solver",
+    "AI Enthusiast",
+    "Tech Explorer",
+    "Problem Solver",
   ];
 
   const { displayText: typedSubtitle, isComplete } = useTypingEffect(
