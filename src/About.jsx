@@ -645,14 +645,8 @@ function VerticalTimeline() {
       period: "2024",
       type: "freelance",
       description:
-        "End-to-end development from design to deployment. Handled the complete project lifecycle independently, managing client requirements and technical implementation. Built a comprehensive management system with user authentication and data visualization.",
-      skills: [
-        "Next.js",
-        "Node.js",
-        "FIREBASE ",
-        "Client Management",
-        "UI/UX Design",
-      ],
+        " Handled end-to-end development from design to deployment. Matched client’s needs with designs and color patterns, built user-friendly interfaces, and ensured smooth functionality.",
+      skills: ["Next.js", "Client Management", "UI/UX Design"],
       achievements: "Delivered required application on time",
     },
     {
@@ -661,7 +655,7 @@ function VerticalTimeline() {
       period: "2023-present",
       type: "volunteer",
       description:
-        "Created presentations and digital content for community awareness campaigns. Contributing to social impact initiatives through creative and technical skills. Developed engaging visual content that effectively communicated important social messages.",
+        "Created presentations and digital content for community awareness campaigns, reports. Contributing to social impact initiatives through creative and technical skills. Developed engaging visual content that effectively communicated important social messages.",
       skills: [
         "Content Creation",
         "Presentation Design",
