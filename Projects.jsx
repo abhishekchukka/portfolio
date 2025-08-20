@@ -918,24 +918,6 @@ export default function Projects() {
           <p className="text-xs sm:text-sm text-gray-400 mb-2 font-mono">
             🖱️ DRAG_TO_ROTATE • 🔍 SCROLL_TO_ZOOM • ✨ CLICK_PLANETS_TO_EXPLORE
           </p>
-          <div className="flex justify-center gap-3 sm:gap-6 text-xs flex-wrap">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#ffaa00]"></div>
-              <span className="text-gray-500 font-mono">WEB_DEV</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#00ff88]"></div>
-              <span className="text-gray-500 font-mono">AI_ML</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#87ceeb]"></div>
-              <span className="text-gray-500 font-mono">FULLSTACK</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#ff6b35]"></div>
-              <span className="text-gray-500 font-mono">CLIENT_WORK</span>
-            </div>
-          </div>
         </div>
       )}
     </section>
