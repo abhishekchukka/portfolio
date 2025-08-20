@@ -653,7 +653,7 @@ function VerticalTimeline() {
         "Client Management",
         "UI/UX Design",
       ],
-      achievements: "Delivered complete solution on time and within budget",
+      achievements: "Delivered required application on time",
     },
     {
       role: "Creative Volunteer",

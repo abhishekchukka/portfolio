@@ -8,19 +8,6 @@ import {
 } from "@react-three/drei";
 import emailjs from "@emailjs/browser";
 
-/*
- * EmailJS Setup Instructions:
- * 1. Go to https://www.emailjs.com/ and create an account
- * 2. Create a new service (Gmail recommended)
- * 3. Create an email template with the following variables:
- *    - {{from_name}} - sender's name
- *    - {{from_email}} - sender's email
- *    - {{message}} - the message content
- *    - {{to_email}} - your email (john.chukka@gmail.com)
- * 4. Get your Service ID, Template ID, and Public Key
- * 5. Replace the placeholder values below in the handleSubmit function
- */
-
 // Floating particles for 3D background
 const FloatingParticles = () => {
   const meshRef = useRef();
@@ -135,9 +122,9 @@ const Contact = () => {
 
     try {
       // EmailJS configuration
-      const serviceId = "service_your_id"; // You'll need to replace with your EmailJS service ID
-      const templateId = "template_your_id"; // You'll need to replace with your EmailJS template ID
-      const publicKey = "your_public_key"; // You'll need to replace with your EmailJS public key
+      const serviceId = "service_cr4l68z";
+      const templateId = "template_sm40ror";
+      const publicKey = "1rKoIlWFno-cWugEh";
 
       const templateParams = {
         from_name: formData.name,
